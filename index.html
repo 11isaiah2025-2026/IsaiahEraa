@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isaiah 2025-2026 Gallery</title>
+    <link rel="icon" type="image/png" href="Screenshot 2026-02-05 222839.png">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <style>
+        * { box-sizing: border-box; transition: all 0.2s ease; }
+        #bgVideo { position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%; z-index: -2; object-fit: cover; }
+        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 23, 41, 0.75); z-index: -1; }
+        body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; margin: 0; overflow-x: hidden; background: #000; color: white; }
+        
+        #welcomePopup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+        .popup-box { background: rgba(45, 130, 222, 0.2); border: 3px solid #00acfb; border-radius: 25px; padding: 40px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 0 50px rgba(0, 172, 251, 0.4); }
+        .glow-text { color: #08a1f4; margin-top: 0; animation: textPulse 1.5s infinite alternate; }
+        @keyframes textPulse { from { text-shadow: 0 0 10px #08a1f4, 0 0 20px #08a1f4; } to { text-shadow: 0 0 20px #7b23ff, 0 0 40px #7b23ff; } }
+        
+        @keyframes bobble {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .hanging-pic { animation: bobble 3s ease-in-out infinite; }
+
+        .gallery-nav-btn {
+            width: 40px; 
+            height: auto;
+            cursor: pointer;
+            filter: drop-shadow(0 0 5px #7b23ff);
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+        .gallery-nav-btn:hover {
+            transform: scale(1.2) rotate(-5deg);
+            filter: drop-shadow(0 0 15px #08a1f4);
+            opacity: 1;
+        }
+
+        /* --- FIXED VIDEO TITLE GLOW STYLE --- */
+        .video-title-glow {
+            color: #08a1f4 !important;
+            text-shadow: 0 0 10px rgba(8, 161, 244, 0.8), 0 0 20px rgba(123, 35, 255, 0.5);
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .loader-container { display: flex; flex-direction: column; align-items: center; margin: 30px 0; }
+        .neon-spinner { width: 60px; height: 60px; border: 5px solid rgba(123, 35, 255, 0.2); border-top: 5px solid #08a1f4; border-radius: 50%; animation: spin 1s linear infinite; filter: drop-shadow(0 0 10px #08a1f4); margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .loading-bar { width: 100%; height: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; border: 1px solid #7b23ff; }
+        .bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #7b23ff, #08a1f4); box-shadow: 0 0 15px #08a1f4; animation: progress 3s forwards ease-in-out; }
+        @keyframes progress { 0% { width: 0%; } 100% { width: 100%; } }
+        
+        .enter-btn { margin-top: 25px; padding: 12px 35px; background: #7b23ff; color: white; border: none; border-radius: 50px; font-weight: 900; font-size: 1.2rem; cursor: pointer; box-shadow: 0 0 20px #7b23ff; text-transform: uppercase; }
+        
+        header { background: rgba(45, 130, 222, 0.8); backdrop-filter: blur(10px); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid #00acfb; }
+        .logo { font-weight: 900; color: #7b23ff; font-size: 1.8rem; letter-spacing: -1.5px; cursor: pointer; text-shadow: 2px 2px 0px #00b7ff; display: flex; align-items: center; gap: 10px; }
+        .search-bar { width: 45%; display: flex; }
+        .search-bar input { width: 100%; padding: 10px 15px; border: 2px solid #0a98e5; border-radius: 25px 0 0 25px; outline: none; color: #000; }
+        .search-bar button { padding: 0 20px; border: 2px solid #3400f0; border-left: none; border-radius: 0 25px 25px 0; cursor: pointer; background: #04314f; color: white; }
+        
+        .content { width: 100%; padding: 25px; }
+        .section-title { font-size: 1.5rem; margin-bottom: 20px; color: #3abdfa; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px #3abdfa; }
+        
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .video-card { cursor: pointer; background: rgba(11, 40, 45, 0.6); border-radius: 18px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
+        .video-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 0 25px rgba(215, 28, 212, 0.6); border-color: #d71cd4; }
+        
+        .thumbnail-container { border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; background: #000; }
+        .thumbnail-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #7dd3fc; overflow: hidden; background: #1e055e; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        
+        #freedomWallSection, #photoGallerySection { display: none; padding: 20px; animation: fadeIn 0.5s; }
+        .wall-container { background: rgba(0,0,0,0.7); border: 2px dashed #7b23ff; border-radius: 20px; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .wall-input { width: 100%; padding: 15px; border-radius: 10px; border: none; margin-bottom: 10px; background: #1a1a1a; color: white; font-family: inherit; }
+        .post-btn { background: #08a1f4; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .wall-posts { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; }
+        .sticky-note { position: relative; background: #7b23ff; padding: 15px; border-radius: 5px; min-width: 150px; max-width: 250px; box-shadow: 5px 5px 15px rgba(0,0,0,0.5); transform: rotate(-1deg); font-size: 0.9rem; }
+        .sticky-note:nth-child(even) { background: #d71cd4; transform: rotate(2deg); }
+
+        .secret-sparkle { cursor: pointer; opacity: 0.3; font-size: 1.2rem; }
+        .secret-sparkle:hover { opacity: 1; text-shadow: 0 0 10px #fff; }
+
+        #playerOverlay, #imagePopup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 23, 41, 0.95); backdrop-filter: blur(15px); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        .player-container { width: 85%; max-width: 1000px; position: relative; background: #000; border-radius: 20px; border: 3px solid #d71cd4; }
+        .video-wrapper { width: 100%; aspect-ratio: 16/9; border-radius: 16px 16px 0 0; overflow: hidden; position: relative; }
+        .close-player-btn { position: absolute; top: -18px; right: -18px; width: 45px; height: 45px; background: #f43f5e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 22px; font-weight: bold; border: 4px solid #011729; z-index: 10001; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<audio id="welcomeMusic" loop><source src="I Promise It Won't Happen Again.mp3" type="audio/mpeg"></audio>
+
+<div id="welcomePopup">
+    <div class="popup-box">
+        <div id="loadingSection">
+            <h1 class="glow-text">Isaiah 2025-2026</h1>
+            <div class="loader-container">
+                <div class="neon-spinner"></div>
+                <div class="loading-bar"><div class="bar-fill"></div></div>
+            </div>
+            <p style="color: #7dd3fc;"> reconnecting within memories... </p>
+        </div>
+        <div id="readySection" style="display:none;">
+            <h1 class="glow-text">WELCOME!!</h1>
+            <img src="modksyy-removebg-preview.png" style="width: 100px; margin-bottom: 10px;">
+            <p>I made this as a demo for my final examination project! Enjoy your stay!</p>
+            <button class="enter-btn" onclick="closePopup()">OKIE</button>
+        </div>
+    </div>
+</div>
+
+<video autoplay muted loop id="bgVideo">
+    <source src="heywaters.mp4" type="video/mp4"> 
+</video>
+<div class="bg-overlay"></div>
+
+<header>
+    <div class="logo" onclick="handleLogoClick()">Isaiah 2025-2026<img src="OskyLeft.gif" width="50"></div>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="search within video gallery..">
+        <button onclick="handleSearch()">🔍</button>
+    </div>
+    <div class="user-menu-container" style="display: flex; align-items: center; gap: 15px;">
+        <img src="Screenshot 2026-02-11 203353.png" class="gallery-nav-btn" onclick="openPhotoGallery()" title="Memory Gallery">
+        
+        <span class="secret-sparkle" onclick="openFreedomWall()" title="Freedom Wall">✨</span>
+        <div class="avatar" style="cursor: pointer; width: 45px; height: 45px;">
+            <img src="sky.jpg" onerror="this.src='https://ui-avatars.com/api/?name=S&background=d71cd4&color=fff'">
+        </div>
+    </div>
+</header>
+
+<div id="mainSection">
+    <main class="content" id="mainContent"></main>
+</div>
+
+<div id="photoGallerySection">
+    <h2 class="section-title">MEMORY GALLERY 📸</h2>
+    <div class="video-grid" id="photoGrid"></div>
+    <div style="text-align: center; margin-top: 30px;">
+        <img src="Back_to_homepage-removebg-preview.png" onclick="goHome()" style="width: 150px; cursor: pointer; filter: drop-shadow(0 0 5px #ff00c8);" class="hanging-pic" alt="Back Home">
+    </div>
+</div>
+
+<div id="imagePopup" onclick="this.style.display='none'">
+    <img id="fullImage" src="" style="max-width:90%; max-height:85%; border: 3px solid #d71cd4; border-radius:15px; box-shadow: 0 0 30px #d71cd4;">
+    <p style="margin-top: 15px; color: white; font-weight: bold;">Click anywhere to close!!</p>
+</div>
+
+<div id="freedomWallSection">
+    <h2 class="section-title">THE FREEDOM WALL 💜</h2>
+    <div style="position: relative; max-width: 850px; margin: 0 auto;">
+        <img src="download__15_-removebg-preview.png" style="position: absolute; top: -30px; left: -40px; width: 100px; z-index: 5; transform: rotate(-15deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.5));">
+        <img src="download (13).jpg" style="position: absolute; bottom: -20px; right: -50px; width: 120px; z-index: 5; filter: drop-shadow(-2px -4px 8px rgba(0,0,0,0.5));">
+        <div class="wall-container">
+            <textarea id="wallInput" class="wall-input" placeholder="yo dude type something..."></textarea>
+            <button class="post-btn" onclick="addPost()">POST TO WALL!!!</button>
+            <div id="wallPosts" class="wall-posts"></div>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="Back_to_homepage-removebg-preview.png" onclick="goHome()" style="width: 150px; cursor: pointer; filter: drop-shadow(0 0 5px #8800ff);" class="hanging-pic" alt="Back Home">
+    </div>
+</div>
+
+<div id="playerOverlay">
+    <div class="player-container">
+        <div class="close-player-btn" onclick="closePlayer()">✕</div>
+        <div class="video-wrapper">
+            <iframe id="mainPlayer" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media; fullscreen"></iframe>
+        </div>
+        <div class="player-info-bar" style="padding: 20px;">
+            <h2 id="videoTitleDisplay"></h2>
+        </div>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyD8mTql_XmsVl0ld9w4PAV7RuTHpIbfwEg",
+        authDomain: "isaiah-d9353.firebaseapp.com",
+        databaseURL: "https://isaiah-d9353-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "isaiah-d9353",
+        storageBucket: "isaiah-d9353.firebasestorage.app",
+        messagingSenderId: "17764432021",
+        appId: "1:17764432021:web:a7151ad6ae8cd099d9039c"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    let adminMode = false;
+    let logoClicks = 0;
+    let clickTimer = null;
+    const SECRET_PASSWORD = "skyieetubeeadmin"; 
+
+    const welcomeMusic = document.getElementById('welcomeMusic');
+    const container = document.getElementById('mainContent');
+    const searchInput = document.getElementById('searchInput');
+    const playerIframe = document.getElementById('mainPlayer');
+
+    const videoLibrary = [
+        { title: "FNF vs Skyverse - Star", author: "Jerne", youtubeId: "QejwFcgWuIo", thumbnail: "starr.jpg", profilePic: "modksyy.png" }, 
+        { title: "Ski wtf are u doing here?", author: "Matt?", youtubeId: "Pg926OLZBxA", thumbnail: "Ski.jpg", profilePic: "birdap.png" },
+        { title: "NUSKY GETS RAGEBAITED LMFAO", author: "Matt?", youtubeId: "BnU45f3d5Yg", thumbnail: "Title_bird.png", profilePic: "birdap.png" },
+        { title: "Carol x Whitty | The Date Week!<3", author: "skyfangirl", youtubeId: "CoIsIo1xSMM", thumbnail: "carolxwhitty.jpg", profilePic: "Bays.png" }
+    ];
+
+    const photoLibrary = [
+        { title: "Memory 1", url: "download (18).jpg" },
+        { title: "Memory 2", url: "download (17).jpg" },
+        { title: "Memory 3", url: "download (16).jpg" }
+    ];
+
+    database.ref('posts').on('value', (snapshot) => { renderWall(snapshot.val()); });
+
+    function renderWall(data) {
+        const wall = document.getElementById('wallPosts');
+        wall.innerHTML = "";
+        if (!data) return;
+        Object.keys(data).reverse().forEach(postId => {
+            const post = data[postId];
+            const note = document.createElement('div');
+            note.className = 'sticky-note';
+            let deleteBtn = adminMode ? `<button onclick="deletePost('${postId}')" style="position:absolute; top:-8px; right:-8px; background:#ff4b4b; color:white; border-radius:50%; border:2px solid white; cursor:pointer; width:24px; height:24px; font-weight:bold; z-index:10; display:flex; align-items:center; justify-content:center;">✕</button>` : "";
+            note.innerHTML = `${deleteBtn}${post.text}`;
+            wall.appendChild(note);
+        });
+    }
+
+    function addPost() {
+        const input = document.getElementById('wallInput');
+        if (input.value.trim() === "") return;
+        database.ref('posts').push({ text: input.value, timestamp: Date.now() });
+        input.value = "";
+    }
+
+    function deletePost(id) {
+        if (confirm("Delete this post?")) {
+            database.ref('posts/' + id).set(null).catch(e => alert(e.message));
+        }
+    }
+
+    function openPhotoGallery() {
+        document.getElementById('mainSection').style.display = 'none';
+        document.getElementById('freedomWallSection').style.display = 'none';
+        document.getElementById('photoGallerySection').style.display = 'block';
+        renderPhotos();
+    }
+
+    function renderPhotos() {
+        const grid = document.getElementById('photoGrid');
+        grid.innerHTML = "";
+        photoLibrary.forEach(photo => {
+            const card = document.createElement('div');
+            card.className = 'video-card hanging-pic';
+            card.onclick = () => {
+                document.getElementById('fullImage').src = photo.url;
+                document.getElementById('imagePopup').style.display = 'flex';
+            };
+            card.innerHTML = `
+                <div class="thumbnail-container"><img src="${photo.url}"></div>
+                <div style="padding:10px;"><h3 class="video-title-glow">${photo.title}</h3></div>`;
+            grid.appendChild(card);
+        });
+    }
+
+    function handleLogoClick() {
+        logoClicks++;
+        if (clickTimer) clearTimeout(clickTimer);
+        if (logoClicks === 3) {
+            logoClicks = 0;
+            const pass = prompt("Enter Admin Key:");
+            if (pass === SECRET_PASSWORD) {
+                adminMode = true;
+                alert("ADMIN ACTIVE");
+                database.ref('posts').once('value', (s) => renderWall(s.val()));
+            }
+        } else {
+            clickTimer = setTimeout(() => {
+                if (logoClicks > 0 && logoClicks < 3) goHome();
+                logoClicks = 0;
+            }, 500);
+        }
+    }
+
+    function goHome() {
+        document.getElementById('mainSection').style.display = 'block';
+        document.getElementById('freedomWallSection').style.display = 'none';
+        document.getElementById('photoGallerySection').style.display = 'none';
+        renderHome();
+    }
+
+    window.onload = function() {
+        welcomeMusic.play().catch(() => {});
+        renderHome();
+        setTimeout(() => {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('readySection').style.display = 'block';
+        }, 3000);
+    };
+
+    function openFreedomWall() {
+        document.getElementById('mainSection').style.display = 'none';
+        document.getElementById('photoGallerySection').style.display = 'none';
+        document.getElementById('freedomWallSection').style.display = 'block';
+    }
+
+    function handleSearch() {
+        const query = searchInput.value.toLowerCase();
+        const filtered = videoLibrary.filter(v => v.title.toLowerCase().includes(query));
+        renderHome(filtered);
+    }
+
+    function closePopup() {
+        document.getElementById('welcomePopup').style.display = 'none';
+        welcomeMusic.volume = 0.6;
+        welcomeMusic.play();
+        document.getElementById('bgVideo').play();
+    }
+
+    function renderHome(videos = videoLibrary) {
+        container.innerHTML = `<h2 class="section-title">Video Gallery ✨</h2><div class="video-grid"></div>`;
+        const grid = container.querySelector('.video-grid');
+        videos.forEach(v => {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            card.onclick = () => openPlayer(v.youtubeId, v.title);
+            card.innerHTML = `<div class="thumbnail-container"><img src="${v.thumbnail}" onerror="this.src='https://img.youtube.com/vi/${v.youtubeId}/maxresdefault.jpg'"></div>
+                <div style="display:flex; gap:12px; margin-top:12px;">
+                    <div class="avatar"><img src="${v.profilePic}"></div>
+                    <div class="text-info"><h3 class="video-title-glow">${v.title}</h3><p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7);">${v.author}</p></div>
+                </div>`;
+            grid.appendChild(card);
+        });
+    }
+
+    function openPlayer(id, title) {
+        welcomeMusic.pause();
+        document.getElementById('videoTitleDisplay').textContent = title;
+        playerIframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+        document.getElementById('playerOverlay').style.display = 'flex';
+    }
+
+    function closePlayer() {
+        document.getElementById('playerOverlay').style.display = 'none';
+        playerIframe.src = "";
+        welcomeMusic.play();
+    }
+</script>
+</body>
+</html>
