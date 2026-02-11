@@ -10,6 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     
     <style>
+        /* --- CORE STYLES --- */
         * { box-sizing: border-box; transition: all 0.2s ease; }
         #bgVideo { position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%; z-index: -2; object-fit: cover; }
         .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 23, 41, 0.75); z-index: -1; }
@@ -20,33 +21,13 @@
         .glow-text { color: #08a1f4; margin-top: 0; animation: textPulse 1.5s infinite alternate; }
         @keyframes textPulse { from { text-shadow: 0 0 10px #08a1f4, 0 0 20px #08a1f4; } to { text-shadow: 0 0 20px #7b23ff, 0 0 40px #7b23ff; } }
         
-        @keyframes bobble {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
+        @keyframes bobble { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
         .hanging-pic { animation: bobble 3s ease-in-out infinite; }
 
-        .gallery-nav-btn {
-            width: 40px; 
-            height: auto;
-            cursor: pointer;
-            filter: drop-shadow(0 0 5px #7b23ff);
-            opacity: 0.8;
-            transition: all 0.3s ease;
-        }
-        .gallery-nav-btn:hover {
-            transform: scale(1.2) rotate(-5deg);
-            filter: drop-shadow(0 0 15px #08a1f4);
-            opacity: 1;
-        }
+        .gallery-nav-btn { width: 40px; height: auto; cursor: pointer; filter: drop-shadow(0 0 5px #7b23ff); opacity: 0.8; transition: all 0.3s ease; }
+        .gallery-nav-btn:hover { transform: scale(1.2) rotate(-5deg); filter: drop-shadow(0 0 15px #08a1f4); opacity: 1; }
 
-        /* --- FIXED VIDEO TITLE GLOW STYLE --- */
-        .video-title-glow {
-            color: #08a1f4 !important;
-            text-shadow: 0 0 10px rgba(8, 161, 244, 0.8), 0 0 20px rgba(123, 35, 255, 0.5);
-            margin: 0;
-            font-size: 16px;
-        }
+        .video-title-glow { color: #08a1f4 !important; text-shadow: 0 0 10px rgba(8, 161, 244, 0.8), 0 0 20px rgba(123, 35, 255, 0.5); margin: 0; font-size: 16px; }
 
         .loader-container { display: flex; flex-direction: column; align-items: center; margin: 30px 0; }
         .neon-spinner { width: 60px; height: 60px; border: 5px solid rgba(123, 35, 255, 0.2); border-top: 5px solid #08a1f4; border-radius: 50%; animation: spin 1s linear infinite; filter: drop-shadow(0 0 10px #08a1f4); margin-bottom: 20px; }
@@ -88,10 +69,42 @@
         .secret-sparkle { cursor: pointer; opacity: 0.3; font-size: 1.2rem; }
         .secret-sparkle:hover { opacity: 1; text-shadow: 0 0 10px #fff; }
 
-        #playerOverlay, #imagePopup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 23, 41, 0.95); backdrop-filter: blur(15px); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .player-container { width: 85%; max-width: 1000px; position: relative; background: #000; border-radius: 20px; border: 3px solid #d71cd4; }
-        .video-wrapper { width: 100%; aspect-ratio: 16/9; border-radius: 16px 16px 0 0; overflow: hidden; position: relative; }
-        .close-player-btn { position: absolute; top: -18px; right: -18px; width: 45px; height: 45px; background: #f43f5e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 22px; font-weight: bold; border: 4px solid #011729; z-index: 10001; }
+        /* --- Y2K PLAYER OVERLAY STYLES --- */
+        #playerOverlay {
+            --y2k-blue: #5b8ad9;
+            --y2k-border: #4269a7;
+            display: none; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(180deg, #a0d8ff 0%, #e1f2ff 100%); 
+            z-index: 9999; align-items: center; justify-content: center;
+        }
+
+        /* The class that handles the smooth fade */
+        .overlay-active {
+            display: flex !important;
+            animation: y2kFadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes y2kFadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .overlay-grid { 
+            display: grid; 
+            grid-template-columns: 800px 320px; 
+            grid-template-rows: 500px auto; /* Changed auto to prevent extra gap */
+            gap: 20px; 
+            position: relative; 
+        }
+        .y2k-window { background: #fff; border: 4px solid var(--y2k-border); border-radius: 8px; display: flex; flex-direction: column; box-shadow: 6px 6px 0px rgba(66, 105, 167, 0.2); overflow: hidden; }
+        .y2k-header { background: var(--y2k-blue); color: white; padding: 8px; display: flex; justify-content: flex-end; gap: 8px; border-bottom: 4px solid var(--y2k-border); }
+        .stream-chat { height: 100%; color: #333; background: #f9f9f9; padding: 10px; overflow-y: auto; text-align: left; font-size: 13px; text-shadow: none; font-weight: normal; }
+        .chat-msg { background: #eee; border-radius: 4px; padding: 5px; margin-bottom: 5px; border-left: 3px solid var(--y2k-blue); color: #333; }
+        .close-player-btn-y2k { position: absolute; top: -50px; right: -20px; width: 45px; height: 45px; background: #f43f5e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 22px; font-weight: bold; border: 4px solid var(--y2k-border); z-index: 10001; }
+        .y2k-banner { background: var(--y2k-blue); color: white; text-align: center; padding: 10px; font-weight: bold; border: 4px solid var(--y2k-border); font-size: 18px; }
+
+        #imagePopup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 23, 41, 0.95); backdrop-filter: blur(15px); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
@@ -119,9 +132,7 @@
     </div>
 </div>
 
-<video autoplay muted loop id="bgVideo">
-    <source src="heywaters.mp4" type="video/mp4"> 
-</video>
+<video autoplay muted loop id="bgVideo"><source src="heywaters.mp4" type="video/mp4"></video>
 <div class="bg-overlay"></div>
 
 <header>
@@ -132,7 +143,6 @@
     </div>
     <div class="user-menu-container" style="display: flex; align-items: center; gap: 15px;">
         <img src="Screenshot 2026-02-11 203353.png" class="gallery-nav-btn" onclick="openPhotoGallery()" title="Memory Gallery">
-        
         <span class="secret-sparkle" onclick="openFreedomWall()" title="Freedom Wall">✨</span>
         <div class="avatar" style="cursor: pointer; width: 45px; height: 45px;">
             <img src="sky.jpg" onerror="this.src='https://ui-avatars.com/api/?name=S&background=d71cd4&color=fff'">
@@ -174,13 +184,19 @@
 </div>
 
 <div id="playerOverlay">
-    <div class="player-container">
-        <div class="close-player-btn" onclick="closePlayer()">✕</div>
-        <div class="video-wrapper">
-            <iframe id="mainPlayer" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media; fullscreen"></iframe>
+    <div class="overlay-grid">
+        <div class="close-player-btn-y2k" onclick="closePlayer()">✕</div>
+        <div class="y2k-window">
+            <div class="y2k-header"><span>_</span> <span>□</span> <span>×</span></div>
+            <div style="flex-grow:1; background:#000;">
+                <iframe id="mainPlayer" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media; fullscreen"></iframe>
+            </div>
         </div>
-        <div class="player-info-bar" style="padding: 20px;">
-            <h2 id="videoTitleDisplay"></h2>
+        <div style="display:flex; flex-direction:column; gap:15px;">
+            <div class="y2k-window" style="height:415px;"> <div class="y2k-header" style="justify-content:space-between;"><span>live chat ●</span><span>×</span></div>
+                <div class="stream-chat" id="streamChat"></div>
+            </div>
+            <div class="y2k-banner" id="videoTitleDisplay">Loading...</div>
         </div>
     </div>
 </div>
@@ -222,11 +238,17 @@
         { title: "Memory 3", url: "download (16).jpg" }
     ];
 
+    searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { handleSearch(); }
+    });
+
     database.ref('posts').on('value', (snapshot) => { renderWall(snapshot.val()); });
 
     function renderWall(data) {
         const wall = document.getElementById('wallPosts');
+        const chat = document.getElementById('streamChat');
         wall.innerHTML = "";
+        chat.innerHTML = ""; 
         if (!data) return;
         Object.keys(data).reverse().forEach(postId => {
             const post = data[postId];
@@ -235,7 +257,13 @@
             let deleteBtn = adminMode ? `<button onclick="deletePost('${postId}')" style="position:absolute; top:-8px; right:-8px; background:#ff4b4b; color:white; border-radius:50%; border:2px solid white; cursor:pointer; width:24px; height:24px; font-weight:bold; z-index:10; display:flex; align-items:center; justify-content:center;">✕</button>` : "";
             note.innerHTML = `${deleteBtn}${post.text}`;
             wall.appendChild(note);
+
+            const msg = document.createElement('div');
+            msg.className = 'chat-msg';
+            msg.innerHTML = `<strong>Guest:</strong> ${post.text}`;
+            chat.appendChild(msg);
         });
+        chat.scrollTop = chat.scrollHeight;
     }
 
     function addPost() {
@@ -268,8 +296,7 @@
                 document.getElementById('fullImage').src = photo.url;
                 document.getElementById('imagePopup').style.display = 'flex';
             };
-            card.innerHTML = `
-                <div class="thumbnail-container"><img src="${photo.url}"></div>
+            card.innerHTML = `<div class="thumbnail-container"><img src="${photo.url}"></div>
                 <div style="padding:10px;"><h3 class="video-title-glow">${photo.title}</h3></div>`;
             grid.appendChild(card);
         });
@@ -301,15 +328,6 @@
         renderHome();
     }
 
-    window.onload = function() {
-        welcomeMusic.play().catch(() => {});
-        renderHome();
-        setTimeout(() => {
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('readySection').style.display = 'block';
-        }, 3000);
-    };
-
     function openFreedomWall() {
         document.getElementById('mainSection').style.display = 'none';
         document.getElementById('photoGallerySection').style.display = 'none';
@@ -319,6 +337,7 @@
     function handleSearch() {
         const query = searchInput.value.toLowerCase();
         const filtered = videoLibrary.filter(v => v.title.toLowerCase().includes(query));
+        goHome(); 
         renderHome(filtered);
     }
 
@@ -349,14 +368,22 @@
         welcomeMusic.pause();
         document.getElementById('videoTitleDisplay').textContent = title;
         playerIframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-        document.getElementById('playerOverlay').style.display = 'flex';
+        document.getElementById('playerOverlay').classList.add('overlay-active');
     }
 
     function closePlayer() {
-        document.getElementById('playerOverlay').style.display = 'none';
+        document.getElementById('playerOverlay').classList.remove('overlay-active');
         playerIframe.src = "";
         welcomeMusic.play();
     }
+
+    window.onload = function() {
+        renderHome();
+        setTimeout(() => {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('readySection').style.display = 'block';
+        }, 3000);
+    };
 </script>
 </body>
 </html>
