@@ -16,6 +16,32 @@
         .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 23, 41, 0.75); z-index: -1; }
         body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; margin: 0; overflow-x: hidden; background: #000; color: white; }
         
+        /* --- JELLYFISH RAIN STYLES --- */
+        #jellyRainContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            overflow: hidden;
+        }
+        .falling-jelly {
+            position: absolute;
+            top: -100px;
+            filter: drop-shadow(0 0 8px rgba(123, 35, 255, 0.6));
+            animation: jellyFall linear forwards;
+            opacity: 0.7;
+        }
+        @keyframes jellyFall {
+            0% { transform: translateY(0) rotate(0deg) translateX(0); }
+            25% { transform: translateX(15px) rotate(10deg); }
+            50% { transform: translateX(-15px) rotate(-10deg); }
+            75% { transform: translateX(10px) rotate(5deg); }
+            100% { transform: translateY(110vh) rotate(0deg) translateX(0); }
+        }
+
         #welcomePopup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .popup-box { background: rgba(45, 130, 222, 0.2); border: 3px solid #00acfb; border-radius: 25px; padding: 40px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 0 50px rgba(0, 172, 251, 0.4); }
         .glow-text { color: #08a1f4; margin-top: 0; animation: textPulse 5.5s infinite alternate; }
@@ -74,7 +100,6 @@
         header { background: rgba(45, 130, 222, 0.8); backdrop-filter: blur(10px); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid #00acfb; }
         .logo { font-weight: 900; color: #7b23ff; font-size: 1.8rem; letter-spacing: -1.5px; cursor: pointer; text-shadow: 2px 2px 0px #00b7ff; display: flex; align-items: center; gap: 10px; }
         
-        /* --- ADAPTIVE SEARCH BAR --- */
         .search-bar { width: 45%; display: flex; }
         .search-bar input { width: 100%; padding: 10px 15px; border: 2px solid #0a98e5; border-radius: 25px 0 0 25px; outline: none; color: #000; }
         .search-bar button { padding: 0 20px; border: 2px solid #3400f0; border-left: none; border-radius: 0 25px 25px 0; cursor: pointer; background: #04314f; color: white; }
@@ -137,13 +162,10 @@
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 768px) {
             header { padding: 10px; }
             .logo { font-size: 1.1rem; flex-shrink: 1; }
             .logo img { width: 35px; }
-
-            /* Hide search bar by default on mobile, make it an icon */
             .search-bar { 
                 display: none; position: absolute; top: 60px; left: 0; 
                 width: 100%; background: rgba(45, 130, 222, 0.95); 
@@ -153,7 +175,6 @@
             .search-bar.active { display: flex; }
             .search-toggle-mobile { display: block; order: 2; }
             .user-menu-container { order: 3; gap: 5px !important; }
-
             .gallery-nav-btn { width: 30px; }
             .video-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 15px; }
             .video-title-glow { font-size: 13px; }
@@ -167,6 +188,8 @@
     </style>
 </head>
 <body>
+
+<div id="jellyRainContainer"></div>
 
 <audio id="welcomeMusic" loop><source src="I don't like mirrors - linger (Full album).mp3" type="audio/mpeg"></audio>
 
@@ -237,14 +260,11 @@
 
 <header>
     <div class="logo" onclick="handleLogoClick()">Isaiah 2025-2026<img src="OskyLeft.gif" width="50"></div>
-    
     <div class="search-toggle-mobile" onclick="toggleSearch()">🔍</div>
-    
     <div class="search-bar" id="searchBar">
         <input type="text" id="searchInput" placeholder="search gallery..">
         <button onclick="handleSearch()">🔍</button>
     </div>
-    
     <div class="user-menu-container" style="display: flex; align-items: center; gap: 10px;">
         <img src="Screenshot 2026-02-11 203353.png" class="gallery-nav-btn" onclick="openPhotoGallery()" title="Memory Gallery">
         <span class="secret-sparkle" onclick="openFreedomWall()" title="Freedom Wall">✨</span>
@@ -254,9 +274,7 @@
     </div>
 </header>
 
-<div id="mainSection">
-    <main class="content" id="mainContent"></main>
-</div>
+<div id="mainSection"><main class="content" id="mainContent"></main></div>
 
 <div id="photoGallerySection">
     <h2 class="section-title fairy-glow">MEMORY GALLERY 📸</h2>
@@ -278,7 +296,7 @@
         <img src="download (13).jpg" style="position: absolute; bottom: -20px; right: -50px; width: 120px; z-index: 5; filter: drop-shadow(-2px -4px 8px rgba(0,0,0,0.5));">
         <div class="wall-container">
             <textarea id="wallInput" class="wall-input" placeholder=" type something... they will never know.."></textarea>
-            <button class="post-btn" onclick="addPost()">POST TO WALL!!!</button> <--dito yun post ah
+            <button class="post-btn" onclick="addPost()">POST TO WALL!!!</button>
             <div id="wallPosts" class="wall-posts"></div>
         </div>
     </div>
@@ -342,6 +360,31 @@
         { title: "Memory 2", url: "download (17).jpg" },
         { title: "Memory 3", url: "download (16).jpg" }
     ];
+
+    // --- JELLYFISH RAIN LOGIC ---
+    function createJelly() {
+        const rainBox = document.getElementById('jellyRainContainer');
+        const jelly = document.createElement('img');
+        
+        // You can change this URL to any image you want to rain!
+        jelly.src = '629883392_1545905563156264_2214158001050615231_n-removebg-preview.png'; 
+        jelly.className = 'falling-jelly';
+        
+        const startLeft = Math.random() * 100;
+        const size = Math.random() * (45 - 20) + 20; 
+        const fallTime = Math.random() * (12 - 6) + 6; 
+        
+        jelly.style.left = startLeft + 'vw';
+        jelly.style.width = size + 'px';
+        jelly.style.animationDuration = fallTime + 's';
+        
+        rainBox.appendChild(jelly);
+        setTimeout(() => { jelly.remove(); }, fallTime * 1000);
+    }
+
+    function startJellyRain() {
+        setInterval(createJelly, 600); // Spawns a new jellyfish every 0.6 seconds
+    }
 
     searchInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') { handleSearch(); }
@@ -466,7 +509,6 @@
         const filtered = videoLibrary.filter(v => v.title.toLowerCase().includes(query));
         goHome(); 
         renderHome(filtered);
-        // Hide on mobile after search
         if(window.innerWidth <= 768) document.getElementById('searchBar').classList.remove('active');
     }
 
@@ -508,6 +550,7 @@
 
     window.onload = function() {
         renderHome();
+        startJellyRain(); // INITIALIZE THE RAIN
         setTimeout(() => {
             document.getElementById('loadingSection').style.display = 'none';
             document.getElementById('readySection').style.display = 'block';
