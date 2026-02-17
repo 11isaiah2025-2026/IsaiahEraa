@@ -21,7 +21,6 @@
         .glow-text { color: #08a1f4; margin-top: 0; animation: textPulse 5.5s infinite alternate; }
         @keyframes textPulse { from { text-shadow: 0 0 10px #08a1f4, 0 0 20px #08a1f4; } to { text-shadow: 0 0 20px #7b23ff, 0 0 40px #7b23ff; } }
         
-        /* --- FAIRY LIGHTS ANIMATION --- */
         @keyframes fairyTwinkle {
             0%, 100% { text-shadow: 0 0 10px #7b23ff, 0 0 20px #7b23ff; color: #fff; }
             50% { text-shadow: 0 0 20px #08a1f4, 0 0 40px #08a1f4, 0 0 60px #08a1f4; color: #7dd3fc; }
@@ -30,6 +29,32 @@
 
         @keyframes bobble { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
         .hanging-pic { animation: bobble 3s ease-in-out infinite; }
+
+        /* --- STAGGERED FADE ANIMATIONS --- */
+        @keyframes overlayFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes elementFadeIn { 
+            from { opacity: 0; transform: translateY(20px); filter: blur(10px); } 
+            to { opacity: 1; transform: translateY(0); filter: blur(0); } 
+        }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        .welcome-stagger { opacity: 0; }
+        .show-welcome .welcome-stagger { animation: elementFadeIn 0.6s ease forwards; }
+        .w-delay-1 { animation-delay: 0.1s; }
+        .w-delay-2 { animation-delay: 0.3s; }
+        .w-delay-3 { animation-delay: 0.5s; }
+        .w-delay-4 { animation-delay: 0.7s; }
+
+        #creditsPopup.active { display: flex !important; animation: overlayFade 0.4s ease forwards; }
+        #creditsPopup.closing { animation: fadeOut 0.3s ease forwards; }
+
+        .stagger { opacity: 0; }
+        .active .stagger { animation: elementFadeIn 0.5s ease forwards; }
+        .active .delay-1 { animation-delay: 0.2s; }
+        .active .delay-2 { animation-delay: 0.4s; }
+        .active .delay-3 { animation-delay: 0.5s; }
+        .active .delay-4 { animation-delay: 0.6s; }
+        .active .delay-5 { animation-delay: 0.8s; }
 
         .gallery-nav-btn { width: 40px; height: auto; cursor: pointer; filter: drop-shadow(0 0 5px #7b23ff); opacity: 0.8; transition: all 0.3s ease; }
         .gallery-nav-btn:hover { transform: scale(1.2) rotate(-5deg); filter: drop-shadow(0 0 15px #08a1f4); opacity: 1; }
@@ -48,10 +73,13 @@
         
         header { background: rgba(45, 130, 222, 0.8); backdrop-filter: blur(10px); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid #00acfb; }
         .logo { font-weight: 900; color: #7b23ff; font-size: 1.8rem; letter-spacing: -1.5px; cursor: pointer; text-shadow: 2px 2px 0px #00b7ff; display: flex; align-items: center; gap: 10px; }
+        
+        /* --- ADAPTIVE SEARCH BAR --- */
         .search-bar { width: 45%; display: flex; }
         .search-bar input { width: 100%; padding: 10px 15px; border: 2px solid #0a98e5; border-radius: 25px 0 0 25px; outline: none; color: #000; }
         .search-bar button { padding: 0 20px; border: 2px solid #3400f0; border-left: none; border-radius: 0 25px 25px 0; cursor: pointer; background: #04314f; color: white; }
-        
+        .search-toggle-mobile { display: none; font-size: 1.5rem; cursor: pointer; padding: 5px; }
+
         .content { width: 100%; padding: 25px; }
         .section-title { font-size: 1.5rem; margin-bottom: 20px; color: #3abdfa; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px #3abdfa; }
         
@@ -77,32 +105,17 @@
         .secret-sparkle { cursor: pointer; opacity: 0.3; font-size: 1.2rem; }
         .secret-sparkle:hover { opacity: 1; text-shadow: 0 0 10px #fff; }
 
-        /* --- TEAM CARD STYLES --- */
         .team-card { width: 160px; text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid rgba(123, 35, 255, 0.2); }
         .team-card img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #7b23ff; object-fit: cover; margin-bottom: 10px; }
 
-        /* --- Y2K PLAYER OVERLAY STYLES --- */
         #playerOverlay {
-            --y2k-blue: #0e3177;
-            --y2k-border: #004093;
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-image: url('pixel artist_ 1041uuu.gif');
-            background-size: cover;
-            background-position: center;
-            z-index: 9999; 
-            align-items: center; 
-            justify-content: center;
+            --y2k-blue: #0e3177; --y2k-border: #004093;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background-image: url('pixel artist_ 1041uuu.gif'); background-size: cover; background-position: center;
+            z-index: 9999; align-items: center; justify-content: center;
         }
 
-        .overlay-active {
-            display: flex !important;
-            animation: y2kFadeIn 0.5s ease-out forwards;
-        }
+        .overlay-active { display: flex !important; animation: y2kFadeIn 0.5s ease-out forwards; }
 
         @keyframes y2kFadeIn {
             from { opacity: 0; transform: translateY(20px) scale(0.98); }
@@ -110,12 +123,8 @@
         }
 
         .overlay-grid { 
-            display: grid; 
-            grid-template-columns: 800px 320px; 
-            grid-template-rows: 500px auto;
-            gap: 20px; 
-            position: relative; 
-            max-width: 95%;
+            display: grid; grid-template-columns: 800px 320px; grid-template-rows: 500px auto;
+            gap: 20px; position: relative; max-width: 95%;
         }
         .y2k-window { background: #7110a5; border: 4px solid var(--y2k-border); border-radius: 8px; display: flex; flex-direction: column; box-shadow: 6px 6px 0px rgba(66, 105, 167, 0.2); overflow: hidden; }
         .y2k-header { background: var(--y2k-blue); color: white; padding: 8px; display: flex; justify-content: flex-end; gap: 8px; border-bottom: 4px solid var(--y2k-border); }
@@ -128,28 +137,28 @@
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 768px) {
             header { padding: 10px; }
-            .logo { font-size: 1.2rem; }
+            .logo { font-size: 1.1rem; flex-shrink: 1; }
             .logo img { width: 35px; }
-            .search-bar { width: 50%; }
-            .gallery-nav-btn { width: 30px; }
 
-            .video-grid { 
-                grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); 
-                gap: 15px; 
+            /* Hide search bar by default on mobile, make it an icon */
+            .search-bar { 
+                display: none; position: absolute; top: 60px; left: 0; 
+                width: 100%; background: rgba(45, 130, 222, 0.95); 
+                padding: 10px; border-bottom: 2px solid #00acfb;
+                z-index: 999; 
             }
+            .search-bar.active { display: flex; }
+            .search-toggle-mobile { display: block; order: 2; }
+            .user-menu-container { order: 3; gap: 5px !important; }
+
+            .gallery-nav-btn { width: 30px; }
+            .video-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 15px; }
             .video-title-glow { font-size: 13px; }
             .avatar { width: 30px; height: 30px; }
-
-            .overlay-grid {
-                grid-template-columns: 100% !important;
-                grid-template-rows: auto auto auto !important;
-                width: 95%;
-                max-height: 90vh;
-                overflow-y: auto;
-                gap: 10px;
-            }
+            .overlay-grid { grid-template-columns: 100% !important; grid-template-rows: auto auto auto !important; width: 95%; max-height: 90vh; overflow-y: auto; gap: 10px; }
             .y2k-window { width: 100% !important; height: auto !important; }
             #mainPlayer { height: 200px !important; }
             .stream-chat { height: 150px !important; }
@@ -162,7 +171,7 @@
 <audio id="welcomeMusic" loop><source src="I don't like mirrors - linger (Full album).mp3" type="audio/mpeg"></audio>
 
 <div id="welcomePopup">
-    <div class="popup-box">
+    <div class="popup-box" id="welcomeBox">
         <div id="loadingSection">
             <h1 class="glow-text">Isaiah 2025-2026</h1>
             <div class="loader-container">
@@ -172,41 +181,54 @@
             <p style="color: #7dd3fc;"> reconnecting within memories... </p>
         </div>
         <div id="readySection" style="display:none;">
-            <h1 class="glow-text">WELCOME!!</h1>
-            <img src="modksyy-removebg-preview.png" style="width: 100px; margin-bottom: 10px;">
-            <p>I made this as a demo for my final examination project! Enjoy your stay!</p>
-            <button class="enter-btn" onclick="closePopup()">OKIE</button>
+            <h1 class="glow-text welcome-stagger w-delay-1">WELCOME!!</h1>
+            <img src="modksyy-removebg-preview.png" class="welcome-stagger w-delay-2" style="width: 100px; margin-bottom: 10px;">
+            <p class="welcome-stagger w-delay-3">I made this as a demo for my final examination project! Enjoy your stay!</p>
+            <button class="enter-btn welcome-stagger w-delay-4" onclick="closePopup()">OKIE</button>
         </div>
     </div>
 </div>
 
-<div id="creditsPopup" onclick="if(event.target == this) this.style.display='none'" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); backdrop-filter:blur(15px); z-index:20000; align-items:center; justify-content:center; padding:20px;">
+<div id="creditsPopup" onclick="if(event.target == this) closeCredits()" 
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('download (20).jpg'); 
+            background-size: cover; background-position: center; backdrop-filter:blur(15px); 
+            z-index:20000; align-items:center; justify-content:center; padding:20px;">
+    
     <div class="popup-box" style="border-color: #7b23ff; box-shadow: 0 0 30px #7b23ff; max-width: 800px; width: 95%; max-height: 90vh; overflow-y: auto;">
-        <h2 class="glow-text" style="color: #de23ff; margin-bottom: 25px;">AND ALL THANKS TO MY TEAMS AND PARTNERS:</h2>
+        <h2 class="glow-text stagger delay-1" style="color: #de23ff; margin-bottom: 25px;">AND ALL THANKS TO MY TEAMS AND PARTNERS FOR MAKING THIS WEBSITE FEEL ALIVE LOL:</h2>
         
         <div id="teamGrid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-            <div class="team-card">
+            <div class="team-card stagger delay-2">
                 <img src="sky.jpg">
                 <h3 style="margin:0; font-size: 1.1rem;">Matt James Abes</h3>
                 <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Dev</p>
             </div>
-
-            <div class="team-card">
+            <div class="team-card stagger delay-3">
                 <img src="modksyy.png">
                 <h3 style="margin:0; font-size: 1.1rem;">?</h3>
                 <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Role sample</p>
             </div>
-
-            <div class="team-card">
+            <div class="team-card stagger delay-4">
+                <img src="modksyy.png">
+                <h3 style="margin:0; font-size: 1.1rem;">?</h3>
+                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Role sample</p>
+            </div>
+            <div class="team-card stagger delay-5">
+                <img src="birdap.png">
+                <h3 style="margin:0; font-size: 1.1rem;">?</h3>
+                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Role sample</p>
+            </div>
+            <div class="team-card stagger delay-2">
                 <img src="birdap.png">
                 <h3 style="margin:0; font-size: 1.1rem;">?</h3>
                 <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Role sample</p>
             </div>
         </div>
 
-        <hr style="width:50%; border:1px solid rgba(123, 35, 255, 0.3); margin:25px auto;">
-        <p style="font-size: 0.9rem;">Project: Isaiah 2025-2026 Gallery</p>
-        <button class="enter-btn" style="padding: 8px 20px; font-size: 0.8rem;" onclick="document.getElementById('creditsPopup').style.display='none'">CLOSE</button>
+        <hr class="stagger delay-5" style="width:50%; border:1px solid rgba(123, 35, 255, 0.3); margin:25px auto;">
+        <p class="stagger delay-5" style="font-size: 0.9rem;">Project: Isaiah 2025-2026 Gallery</p>
+        <button class="enter-btn stagger delay-5" style="padding: 8px 20px; font-size: 0.8rem;" onclick="closeCredits()">We dont care bro</button>
     </div>
 </div>
 
@@ -215,10 +237,14 @@
 
 <header>
     <div class="logo" onclick="handleLogoClick()">Isaiah 2025-2026<img src="OskyLeft.gif" width="50"></div>
-    <div class="search-bar">
+    
+    <div class="search-toggle-mobile" onclick="toggleSearch()">🔍</div>
+    
+    <div class="search-bar" id="searchBar">
         <input type="text" id="searchInput" placeholder="search gallery..">
         <button onclick="handleSearch()">🔍</button>
     </div>
+    
     <div class="user-menu-container" style="display: flex; align-items: center; gap: 10px;">
         <img src="Screenshot 2026-02-11 203353.png" class="gallery-nav-btn" onclick="openPhotoGallery()" title="Memory Gallery">
         <span class="secret-sparkle" onclick="openFreedomWall()" title="Freedom Wall">✨</span>
@@ -336,7 +362,6 @@
             let deleteBtn = adminMode ? `<button onclick="deletePost('${postId}')" style="position:absolute; top:-8px; right:-8px; background:#ff4b4b; color:white; border-radius:50%; border:2px solid white; cursor:pointer; width:24px; height:24px; font-weight:bold; z-index:10; display:flex; align-items:center; justify-content:center;">✕</button>` : "";
             note.innerHTML = `${deleteBtn}${post.text}`;
             wall.appendChild(note);
-
             const msg = document.createElement('div');
             msg.className = 'chat-msg';
             msg.innerHTML = `<strong>Guest:</strong> ${post.text}`;
@@ -414,7 +439,26 @@
     }
 
     function openCredits() {
-        document.getElementById('creditsPopup').style.display = 'flex';
+        const popup = document.getElementById('creditsPopup');
+        popup.classList.remove('closing');
+        popup.classList.add('active');
+    }
+
+    function closeCredits() {
+        const popup = document.getElementById('creditsPopup');
+        popup.classList.add('closing');
+        setTimeout(() => {
+            popup.classList.remove('active');
+            popup.classList.remove('closing');
+            popup.style.display = 'none';
+        }, 300);
+    }
+
+    function toggleSearch() {
+        document.getElementById('searchBar').classList.toggle('active');
+        if(document.getElementById('searchBar').classList.contains('active')) {
+            document.getElementById('searchInput').focus();
+        }
     }
 
     function handleSearch() {
@@ -422,6 +466,8 @@
         const filtered = videoLibrary.filter(v => v.title.toLowerCase().includes(query));
         goHome(); 
         renderHome(filtered);
+        // Hide on mobile after search
+        if(window.innerWidth <= 768) document.getElementById('searchBar').classList.remove('active');
     }
 
     function closePopup() {
@@ -465,6 +511,7 @@
         setTimeout(() => {
             document.getElementById('loadingSection').style.display = 'none';
             document.getElementById('readySection').style.display = 'block';
+            document.getElementById('welcomeBox').classList.add('show-welcome');
         }, 3000);
     };
 </script>
