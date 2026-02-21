@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isaiah 2025-2026 Gallery</title>
-    <link rel="icon" type="image/png" href="Screenshot 2026-02-05 222839.png">
+    <title>𝓘𝓼𝓪𝓲𝓪𝓱 2025-2026 𝓖𝓪𝓵𝓵𝓮𝓻𝔂</title>
+    <link rel="icon" type="image/png" href="favicon.ico">
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     
     <style>
+        
         /* --- CORE STYLES --- */
         * { box-sizing: border-box; transition: all 0.2s ease; }
         #bgVideo { position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%; z-index: -2; object-fit: cover; }
@@ -41,10 +42,47 @@
             75% { transform: translateX(10px) rotate(5deg); }
             100% { transform: translateY(110vh) rotate(0deg) translateX(0); }
         }
+        @keyframes zoomInBounce {
+    0% { opacity: 0; transform: scale(0.5); }
+    70% { transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+}
 
-        #welcomePopup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); z-index: 10000; display: flex; align-items: center; justify-content: center; }
-        .popup-box { background: rgba(45, 130, 222, 0.2); border: 3px solid #00acfb; border-radius: 25px; padding: 40px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 0 50px rgba(0, 172, 251, 0.4); }
-        .glow-text { color: #08a1f4; margin-top: 0; animation: textPulse 5.5s infinite alternate; }
+@keyframes zoomOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(1.3); }
+}
+
+        #welcomePopup { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0, 0, 0, 0.85); 
+    backdrop-filter: blur(15px); 
+    z-index: 10000; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: opacity 0.5s ease; /* Fades the background blur out */
+}
+.popup-box { 
+    background: rgba(45, 130, 222, 0.2); 
+    border: 3px solid #00acfb; 
+    border-radius: 25px; 
+    padding: 40px; 
+    width: 90%; 
+    max-width: 500px; 
+    text-align: center; 
+    box-shadow: 0 0 50px rgba(0, 172, 251, 0.4);
+    /* ENTRY EFFECT */
+    animation: zoomInBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+.pop-out {
+    animation: zoomOut 0.4s ease-in forwards !important;
+}
+        .glow-text { color: #9e0052; margin-top: 0; animation: textPulse 5.5s infinite alternate; }
         @keyframes textPulse { from { text-shadow: 0 0 10px #08a1f4, 0 0 20px #08a1f4; } to { text-shadow: 0 0 20px #7b23ff, 0 0 40px #7b23ff; } }
         
         @keyframes fairyTwinkle {
@@ -108,8 +146,26 @@
         .content { width: 100%; padding: 25px; }
         .section-title { font-size: 1.5rem; margin-bottom: 20px; color: #3abdfa; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px #3abdfa; }
         
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
-        .video-card { cursor: pointer; background: rgba(11, 40, 45, 0.6); border-radius: 18px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
+       .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    /* FIX: Add this to keep rows from stretching to match the tallest card */
+    align-items: start; 
+}
+        .video-card {
+    cursor: pointer;
+    background: rgba(11, 40, 45, 0.6);
+    border-radius: 18px;
+    padding: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    
+    /* FIX: Remove any fixed 'height' or 'min-height' lines here! */
+    height: auto; 
+    display: flex;
+    flex-direction: column;
+}
         .video-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 0 25px rgba(215, 28, 212, 0.6); border-color: #d71cd4; }
         
         .thumbnail-container { border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; background: #000; }
@@ -124,8 +180,32 @@
         .wall-input { width: 100%; padding: 15px; border-radius: 10px; border: none; margin-bottom: 10px; background: #1a1a1a; color: white; font-family: inherit; }
         .post-btn { background: #08a1f4; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .wall-posts { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; }
-        .sticky-note { position: relative; background: #7b23ff; padding: 15px; border-radius: 5px; min-width: 150px; max-width: 250px; box-shadow: 5px 5px 15px rgba(0,0,0,0.5); transform: rotate(-1deg); font-size: 0.9rem; }
-        .sticky-note:nth-child(even) { background: #d71cd4; transform: rotate(2deg); }
+       .sticky-note {
+    background: url('_Download_premium_png_of_Ripped_vintage_paper__ephemera_collage_on_transparent_background_by_Wan_6-removebg-preview.png') no-repeat center;
+    background-size: 100% 100%; /* Stretches the PNG to fit the text */
+    border: none; /* Remove the old border */
+    padding: 30px; /* Adjust this so text stays inside your PNG frame */
+    width: 250px;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #000; /* Change color if your PNG is light-colored */
+}
+        .sticky-note {
+    background: url('_Download_premium_png_of_Ripped_vintage_paper__ephemera_collage_on_transparent_background_by_Wan_6-removebg-preview.png') no-repeat center;
+    background-size: 100% 100%; /* Stretches the PNG to fit the text */
+    border: none; /* Remove the old border */
+    padding: 30px; /* Adjust this so text stays inside your PNG frame */
+    width: 250px;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #000; /* Change color if your PNG is light-colored */
+}
 
         .secret-sparkle { cursor: pointer; opacity: 0.3; font-size: 1.2rem; }
         .secret-sparkle:hover { opacity: 1; text-shadow: 0 0 10px #fff; }
@@ -185,9 +265,226 @@
             .stream-chat { height: 150px !important; }
             .close-player-btn-y2k { top: -10px; right: -5px; width: 35px; height: 35px; font-size: 18px; }
         }
-    </style>
+        /* === MEMORY EXPLOSION EFFECT === */
+.splatter-piece {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 99999;
+    animation: explodeOut 0.9s ease-out forwards;
+}
+
+@keyframes explodeOut {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform:
+            translate(calc(-50% + var(--x)), calc(-50% + var(--y)))
+            scale(1.2)
+            rotate(var(--rot));
+        opacity: 0;
+    }
+}
+/* === WELCOME FLOAT AFTER LOAD === */
+.welcome-float {
+    animation: welcomeFloat 3s ease-in-out infinite,
+               welcomeGlow 4s ease-in-out infinite;
+}
+
+@keyframes welcomeFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+}
+
+@keyframes welcomeGlow {
+    0% {
+        text-shadow: 0 0 10px #08a1f4, 0 0 20px #08a1f4;
+        color: #7dd3fc;
+    }
+    50% {
+        text-shadow: 0 0 25px #7b23ff, 0 0 50px #7b23ff;
+        color: #ffffff;
+    }
+    100% {
+        text-shadow: 0 0 15px #08a1f4, 0 0 30px #08a1f4;
+        color: #7dd3fc;
+    }
+}
+/* --- FLOAT + GLOW FOR WELCOME TEXT --- */
+.welcome-stagger.glowing {
+    animation: elementFadeIn 0.6s ease forwards, welcomeFloat 3s ease-in-out infinite, welcomeGlow 4s ease-in-out infinite;
+}
+
+@keyframes welcomeFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+}
+
+@keyframes welcomeGlow {
+    0% {
+        text-shadow: 0 0 10px #08a1f4, 0 0 20px #08a1f4;
+        color: #7dd3fc;
+    }
+    50% {
+        text-shadow: 0 0 25px #7b23ff, 0 0 50px #7b23ff;
+        color: #ffffff;
+    }
+    100% {
+        text-shadow: 0 0 15px #08a1f4, 0 0 30px #08a1f4;
+        color: #7dd3fc;
+    }
+}
+/* Float animation for welcome text */
+@keyframes floatUpDown {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.glow-text {
+  color: #08a1f4;
+  text-shadow: 0 0 10px #00d5ff, 0 0 20px #7b23ff;
+  animation: floatUpDown 3s ease-in-out infinite, textPulse 5.5s infinite alternate;
+}
+/* --- GLOWING CORNERS --- */
+.glow-corner {
+    position: fixed;
+    width: 200px;   /* size of the glow */
+    height: 200px;
+    pointer-events: none;
+    z-index: 9999;  /* on top */
+    background: radial-gradient(circle, rgba(255, 35, 72, 0.58) 0%, rgba(11, 36, 99, 0.806) 70%);
+    filter: blur(50px);
+    animation: glowPulse 3s ease-in-out infinite alternate;
+}
+
+.glow-top-left    { top: -50px; left: -50px; }
+.glow-top-right   { top: -50px; right: -50px; }
+.glow-bottom-left { bottom: -50px; left: -50px; }
+.glow-bottom-right{ bottom: -50px; right: -50px; }
+
+@keyframes glowPulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.7; }
+}
+.gif-background {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+#photoGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+}
+
+#photoGrid .section-title {
+    flex-basis: 100%; /* Makes the album name take up the whole row */
+    text-align: left;
+    padding-left: 20px;
+}
+/* Smaller cards specifically for the Gallery */
+.photo-card {
+    width: 200px; /* Much smaller than the 300px video cards */
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.photo-card .thumbnail-container {
+    aspect-ratio: 1/1; /* Square look for photos looks cleaner in albums */
+}
+
+.photo-card h3 {
+    font-size: 0.85rem !important; /* Smaller text for smaller cards */
+}
+.back-nav-btn {
+    position: fixed;
+    top: 100px; /* Adjust this to sit below your header */
+    left: 20px;
+    background: rgba(123, 35, 255, 0.2);
+    border: 2px solid #08a1f4;
+    color: #08a1f4;
+    padding: 10px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    z-index: 1001;
+    font-weight: bold;
+    backdrop-filter: blur(5px);
+    display: none; /* Hidden by default on home page */
+    align-items: center;
+    gap: 8px;
+}
+
+.back-nav-btn:hover {
+    background: #08a1f4;
+    color: white;
+    box-shadow: 0 0 15px #08a1f4;
+    transform: scale(1.05);
+}
+
+/* On mobile, we might want it a bit smaller */
+@media (max-width: 768px) {
+    .back-nav-btn {
+        top: auto;
+        bottom: 20px; /* Moves to bottom left on phones for easy thumb reach */
+        left: 15px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+}
+.floating-home-logo {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px; /* Adjust size as needed */
+    height: 60px;
+    cursor: pointer;
+    z-index: 9999;
+    display: none; /* Hidden on Home Page */
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 8px rgba(58, 189, 250, 0.5));
+}
+
+.floating-home-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.floating-home-logo:hover {
+    transform: scale(1.1) rotate(-5deg);
+    filter: drop-shadow(0 0 15px rgba(58, 189, 250, 0.8));
+}
+
+/* Move it lower on mobile so it doesn't block content */
+@media (max-width: 768px) {
+    .floating-home-logo {
+        width: 50px;
+        height: 50px;
+        top: 15px;
+        left: 15px;
+    }
+}
+</style>
 </head>
 <body>
+   <div id="globalHomeBtn" class="floating-home-logo" onclick="goHome()">
+   <img src="image_2026-02-21_230531815-removebg-preview.png" alt="Home">
+</div>
+    <div class="glow-corner glow-top-left"></div>
+<div class="glow-corner glow-top-right"></div>
+<div class="glow-corner glow-bottom-left"></div>
+<div class="glow-corner glow-bottom-right"></div>
 
 <div id="jellyRainContainer"></div>
 
@@ -196,7 +493,7 @@
 <div id="welcomePopup">
     <div class="popup-box" id="welcomeBox">
         <div id="loadingSection">
-            <h1 class="glow-text">Isaiah 2025-2026</h1>
+            <h2 class="glow-text">𝚰𝗌α𝗂αɦ 2025 - 2026</h2>
             <div class="loader-container">
                 <div class="neon-spinner"></div>
                 <div class="loading-bar"><div class="bar-fill"></div></div>
@@ -204,9 +501,9 @@
             <p style="color: #7dd3fc;"> reconnecting within memories... </p>
         </div>
         <div id="readySection" style="display:none;">
-            <h1 class="glow-text welcome-stagger w-delay-1">WELCOME!!</h1>
+            <h1 class="glow-text w-delay-1">𝕎𝔼𝕃ℂ𝕆𝕄𝔼!!</h1>
             <img src="modksyy-removebg-preview.png" class="welcome-stagger w-delay-2" style="width: 100px; margin-bottom: 10px;">
-            <p class="welcome-stagger w-delay-3">I made this as a demo for my final examination project! Enjoy your stay!</p>
+            <p class="welcome-stagger w-delay-3 glow-text ">I made this as my final examination project to showcase our memories with section Isaiah 2025-2026 Enjoy your stay! (PS. its ok to cry let your feelings out.)</p>
             <button class="enter-btn welcome-stagger w-delay-4" onclick="closePopup()">OKIE</button>
         </div>
     </div>
@@ -223,35 +520,35 @@
         
         <div id="teamGrid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
             <div class="team-card stagger delay-2">
-                <img src="sky.jpg">
+                <img src="Screenshot 2026-02-20 113129.png">
                 <h3 style="margin:0; font-size: 1.1rem;">Matt James Abes</h3>
-                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Dev</p>
+                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Developer/Programmer</p>
             </div>
             <div class="team-card stagger delay-3">
-                <img src="modksyy.png">
-                <h3 style="margin:0; font-size: 1.1rem;">?</h3>
-                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Role sample</p>
+                <img src="Screenshot 2026-02-21 224521.png">
+                <h3 style="margin:0; font-size: 1.1rem;">Reigne Escobio</h3>
+                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Video Editor</p>
             </div>
             <div class="team-card stagger delay-4">
-                <img src="modksyy.png">
-                <h3 style="margin:0; font-size: 1.1rem;">?</h3>
-                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Role sample</p>
+                <img src="Screenshot 2026-02-21 224502.png">
+                <h3 style="margin:0; font-size: 1.1rem;">Faith Jimenez</h3>
+                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Layout Design/Design Artist</p>
             </div>
             <div class="team-card stagger delay-5">
-                <img src="birdap.png">
-                <h3 style="margin:0; font-size: 1.1rem;">?</h3>
-                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Role sample</p>
+                <img src="Screenshot 2026-02-21 224549.png">
+                <h3 style="margin:0; font-size: 1.1rem;">Althea Julia Taping</h3>
+                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Archivist</p>
             </div>
             <div class="team-card stagger delay-2">
-                <img src="birdap.png">
-                <h3 style="margin:0; font-size: 1.1rem;">?</h3>
-                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Role sample</p>
+                <img src="Screenshot 2026-02-21 224607.png">
+                <h3 style="margin:0; font-size: 1.1rem;">Khalel Vergara</h3>
+                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Information/Description Writer</p>
             </div>
         </div>
 
         <hr class="stagger delay-5" style="width:50%; border:1px solid rgba(123, 35, 255, 0.3); margin:25px auto;">
         <p class="stagger delay-5" style="font-size: 0.9rem;">Project: Isaiah 2025-2026 Gallery</p>
-        <button class="enter-btn stagger delay-5" style="padding: 8px 20px; font-size: 0.8rem;" onclick="closeCredits()">We dont care bro</button>
+        <button class="enter-btn stagger delay-5" style="padding: 8px 20px; font-size: 0.8rem;" onclick="closeCredits()">wow okay</button>
     </div>
 </div>
 
@@ -259,7 +556,7 @@
 <div class="bg-overlay"></div>
 
 <header>
-    <div class="logo" onclick="handleLogoClick()">Isaiah 2025-2026<img src="OskyLeft.gif" width="50"></div>
+    <div class="logo" onclick="handleLogoClick()">𝚰𝗌α𝗂αɦ 2025 - 2026</div>
     <div class="search-toggle-mobile" onclick="toggleSearch()">🔍</div>
     <div class="search-bar" id="searchBar">
         <input type="text" id="searchInput" placeholder="search gallery..">
@@ -267,9 +564,9 @@
     </div>
     <div class="user-menu-container" style="display: flex; align-items: center; gap: 10px;">
         <img src="Screenshot 2026-02-11 203353.png" class="gallery-nav-btn" onclick="openPhotoGallery()" title="Memory Gallery">
-        <span class="secret-sparkle" onclick="openFreedomWall()" title="Freedom Wall">✨</span>
+        <img src="download (21).jpg" width=40 class="secret-sparkle" onclick="openFreedomWall()" title="Freedom Wall">
         <div class="avatar" style="cursor: pointer;" onclick="openCredits()" title="View Team Credits">
-            <img src="sky.jpg" onerror="this.src='https://ui-avatars.com/api/?name=S&background=d71cd4&color=fff'">
+            <img src="modksyy.png" onerror="this.src='https://ui-avatars.com/api/?name=S&background=d71cd4&color=fff'">
         </div>
     </div>
 </header>
@@ -290,10 +587,10 @@
 </div>
 
 <div id="freedomWallSection">
-    <h2 class="section-title fairy-glow">THE FREEDOM WALL 💜</h2>
+    <h2 class="section-title fairy-glow">𝐅𝗋𝖾𝖾ᑯⱺꭑ 𝐖αᥣᥣ 💜</h2>
     <div style="position: relative; max-width: 850px; margin: 0 auto;">
-        <img src="download__15_-removebg-preview.png" style="position: absolute; top: -30px; left: -40px; width: 100px; z-index: 5; transform: rotate(-15deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.5));">
-        <img src="download (13).jpg" style="position: absolute; bottom: -20px; right: -50px; width: 120px; z-index: 5; filter: drop-shadow(-2px -4px 8px rgba(0,0,0,0.5));">
+        <img src="" style="position: absolute; top: -30px; left: -40px; width: 100px; z-index: 5; transform: rotate(-15deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.5));">
+        <img src="" style="position: absolute; bottom: -20px; right: -50px; width: 120px; z-index: 5; filter: drop-shadow(-2px -4px 8px rgba(0,0,0,0.5));">
         <div class="wall-container">
             <textarea id="wallInput" class="wall-input" placeholder=" type something... they will never know.."></textarea>
             <button class="post-btn" onclick="addPost()">POST TO WALL!!!</button>
@@ -323,8 +620,8 @@
         </div>
     </div>
 </div>
-
 <script>
+    
     const firebaseConfig = {
         apiKey: "AIzaSyBDbcxakCaHb_b-Ve7kOCj6tyLhYb3h_Ho",
         authDomain: "isaiah-d9353.firebaseapp.com",
@@ -348,42 +645,155 @@
     const searchInput = document.getElementById('searchInput');
     const playerIframe = document.getElementById('mainPlayer');
 
+   
+    // --- YOUR VIDEO LIBRARY ---
+    // When adding a new video, make sure the one ABOVE it has a comma after the }
     const videoLibrary = [
-        { title: "FNF vs Skyverse - Star", author: "Jerne", youtubeId: "QejwFcgWuIo", thumbnail: "starr.jpg", profilePic: "modksyy.png" }, 
-        { title: "Ski wtf are u doing here?", author: "Matt?", youtubeId: "Pg926OLZBxA", thumbnail: "Ski.jpg", profilePic: "birdap.png" },
-        { title: "NUSKY GETS RAGEBAITED LMFAO", author: "Matt?", youtubeId: "BnU45f3d5Yg", thumbnail: "Title_bird.png", profilePic: "birdap.png" },
-        { title: "Carol x Whitty | The Date Week!<3", author: "skyfangirl", youtubeId: "CoIsIo1xSMM", thumbnail: "carolxwhitty.jpg", profilePic: "Bays.png" }
+        { title: "FNF vs Skyverse - Star", author: "Jerne", youtubeId: "QejwFcgWuIo", thumbnail: "starr.jpg", description:'' }, 
+        { title: "ARRIBA HUMANISTA: Intramurals 🔥", author: "Isaiah 2025-2026", youtubeId: "fv5y46FWNEo", thumbnail: "Screenshot 2026-02-20 093658.png", description:'December wasn’t just about the holidays it was about sportsmanship, teamwork, and pure HUMSS spirit! We were hooked, cheering for every basketball and volleyball match, and our hearts were on the edge during the suspenseful and breathtaking last game. Our strand ended up as the champion in men’s basketball, and yes we even had our own cheer, “Arriba Humanista!”, all thanks to the dedication of every player, especially those in our section. Moments like these remind us that victory isn’t just about the trophy it’s about the heart, effort, and camaraderie behind it. 💛' },
+        { title: "Intramurals #2", author: "Isaiah 2025-2026", youtubeId: "mbA3WJsKIbQ", thumbnail: "Screenshot 2026-02-20 102731.png", description:'' },
+        { title: "__", author: "Isaiah 2025-2026", youtubeId: "aGChp9bN5zY", thumbnail: "Screenshot 2026-02-20 222647.png",  },
+        { title: "___", author: "Isaiah 2025-2026", youtubeId: "LqNPewX4EEs", thumbnail: "Screenshot 2026-02-20 224702.png", description:'' },
+        { title: "___", author: "Isaiah 2025-2026", youtubeId: "V9b6LELpSSc", thumbnail: "Screenshot 2026-02-20 225704.png", description:'' }
     ];
 
-    const photoLibrary = [
-        { title: "Memory 1", url: "download (18).jpg" },
-        { title: "Memory 2", url: "download (17).jpg" },
-        { title: "Memory 3", url: "download (16).jpg" }
-    ];
+   const photoAlbums = {
+    "Birthday of Sir Markk!": [
+        { title: "", url: "630335119_1250032223694231_8658410645806006581_n.jpg.jpeg" },
+        { title: "", url: "626078592_894724716853667_7084276459759821829_n.jpg.jpeg" },
+        { title: "", url: "629575790_1619746179451242_6390330778395285460_n.jpg.jpeg" },
+        { title: "", url: "629608191_918803474409510_1954518345226066889_n.jpg.jpeg" },
+        { title: "", url: "632125496_1622195278774271_3739313694812495269_n.jpg.jpeg" },
+        { title: "", url: "632141829_936383328838665_5487885229245082752_n.jpg.jpeg" }
+    ],
+    "Explorium/Sciematech": [
+        { title: "", url: "explorium (1).jpeg" },
+        { title: "", url: "explorium (2).jpeg" },
+        { title: "", url: "explorium (3).jpeg" },
+        { title: "", url: "explorium (4).jpeg" },
+        { title: "", url: "explorium (5).jpeg" },
+        { title: "", url: "explorium (6).jpeg" },
+        { title: "", url: "explorium (7).jpeg" },
+        { title: "", url: "explorium (8).jpeg" },
+        { title: "", url: "explorium (9).jpeg" },
+        { title: "", url: "explorium (10).jpeg" },
+        { title: "", url: "explorium (11).jpeg" },
+        { title: "", url: "explorium (12).jpeg" },
+        { title: "", url: "explorium (13).jpeg" },
+        { title: "", url: "explorium (14).jpeg" },
+        { title: "", url: "explorium (15).jpeg" },
+        { title: "", url: "explorium (16).jpeg" },
+        { title: "", url: "explorium (17).jpeg" }
+    ],
+    "Pistang Pinoy": [
+       { title: "", url: "pistang (1).jpeg" },
+        { title: "", url: "pistang (2).jpeg" },
+         { title: "", url: "pistang (3).jpeg" },
+          { title: "", url: "pistang (4).jpeg" },
+           { title: "", url: "pistang (5).jpeg" },
+            { title: "", url: "pistang (6).jpeg" },
+             { title: "", url: "pistang (7).jpeg" },
+              { title: "", url: "pistang (8).jpeg" },
+               { title: "", url: "pistang (9).jpeg" },
+                { title: "", url: "pistang (10).jpeg" },
+                 { title: "", url: "pistang (11).jpeg" },
+                  { title: "", url: "pistang (12).jpeg" },
+                   { title: "", url: "pistang (13).jpeg" },
+                    { title: "", url: "pistang (14).jpeg" },
+                     { title: "", url: "pistang (15).jpeg" },
+            { title: "", url: "pistang (16).jpeg" },          
+             { title: "", url: "pistang (17).jpeg" },
+              { title: "", url: "pistang (18).jpeg" },
+               { title: "", url: "pistang (19).jpeg" },
+                { title: "", url: "pistang (20).jpeg" },
+                 { title: "", url: "pistang (21).jpeg" },
+                  { title: "", url: "pistang (22).jpeg" },
+                   { title: "", url: "pistang (23).jpeg" },
+                    { title: "", url: "pistang (24).jpeg" },
+                     { title: "", url: "pistang (25).jpeg" },
+                      { title: "", url: "pistang (26).jpeg" },
+                       { title: "", url: "pistang (27).jpeg" },
+                        { title: "", url: "pistang (28).jpeg" },
+                         { title: "", url: "pistang (29).jpeg" },
+                          { title: "", url: "pistang (30).jpeg" },
+                           { title: "", url: "pistang (31).jpeg" },
+                            { title: "", url: "pistang (32).jpeg" },
+                             { title: "", url: "pistang (33).jpeg" },
+                              { title: "", url: "pistang (34).jpeg" },
+                               { title: "", url: "pistang (35).jpeg" },
+                                { title: "", url: "pistang (36).jpeg" },
+                                 { title: "", url: "pistang (37).jpeg" },
+                                  { title: "", url: "pistang (38).jpeg" },
+                                   { title: "", url: "pistang (39).jpeg" },
+                                    { title: "", url: "pistang (40).jpeg" }
+                                    
+        ],
+
+        "FINALS/PRELIMS": [
+    { title: "", url: "finals (1).jpeg" },
+    { title: "", url: "finals (2).jpeg" },
+    { title: "", url: "finals (3).jpeg" },
+    { title: "", url: "finals (4).jpeg" },
+    { title: "", url: "finals (5).jpeg" },
+    { title: "", url: "finals (6).jpeg" },
+    { title: "", url: "finals (7).jpeg" },
+    { title: "", url: "finals (8).jpeg" },
+    { title: "", url: "finals (9).jpeg" },
+    { title: "", url: "finals (10).jpeg" },
+    { title: "", url: "finals (11).jpeg" },
+    { title: "", url: "finals (12).jpeg" },
+    { title: "", url: "finals (13).jpeg" },
+    { title: "", url: "finals (14).jpeg" },
+    { title: "", url: "finals (15).jpeg" },
+    { title: "", url: "finals (16).jpeg" },
+    { title: "", url: "finals (17).jpeg" },
+    { title: "", url: "finals (18).jpeg" }
+   ],
+
+   "FINALS/PRELIMS": [
+{ title: "", url: "valentines (1).jpeg" },
+{ title: "", url: "valentines (2).jpeg" },
+{ title: "", url: "valentines (3).jpeg" },
+{ title: "", url: "valentines (4).jpeg" },
+{ title: "", url: "valentines (5).jpeg" },
+{ title: "", url: "valentines (6).jpeg" },
+{ title: "", url: "valentines (7).jpeg" },
+{ title: "", url: "valentines (8).jpeg" },
+{ title: "", url: "valentines (9).jpeg" },
+{ title: "", url: "valentines (10).jpeg" },
+{ title: "", url: "valentines (11).jpeg" },
+{ title: "", url: "valentines (12).jpeg" },
+{ title: "", url: "valentines (13).jpeg" },
+{ title: "", url: "valentines (14).jpeg" },
+{ title: "", url: "valentines (15).jpeg" },
+{ title: "", url: "valentines (16).jpeg" },
+{ title: "", url: "valentines (17).jpeg" },
+{ title: "", url: "valentines (18).jpeg" },
+{ title: "", url: "valentines (19).jpeg" },
+{ title: "", url: "valentines (20).jpeg" },
+{ title: "", url: "valentines (21).jpeg" }
+
+]  
+};
 
     // --- JELLYFISH RAIN LOGIC ---
     function createJelly() {
         const rainBox = document.getElementById('jellyRainContainer');
         const jelly = document.createElement('img');
-        
-        // You can change this URL to any image you want to rain!
         jelly.src = '629883392_1545905563156264_2214158001050615231_n-removebg-preview.png'; 
         jelly.className = 'falling-jelly';
-        
         const startLeft = Math.random() * 100;
         const size = Math.random() * (45 - 20) + 20; 
-        const fallTime = Math.random() * (12 - 6) + 6; 
-        
+        const fallTime = Math.random() * (20 - 20) + 20; 
         jelly.style.left = startLeft + 'vw';
         jelly.style.width = size + 'px';
         jelly.style.animationDuration = fallTime + 's';
-        
         rainBox.appendChild(jelly);
         setTimeout(() => { jelly.remove(); }, fallTime * 1000);
     }
 
     function startJellyRain() {
-        setInterval(createJelly, 600); // Spawns a new jellyfish every 0.6 seconds
+        setInterval(createJelly, 600);
     }
 
     searchInput.addEventListener('keydown', function (e) {
@@ -433,21 +843,43 @@
         renderPhotos();
     }
 
-    function renderPhotos() {
-        const grid = document.getElementById('photoGrid');
-        grid.innerHTML = "";
-        photoLibrary.forEach(photo => {
+function renderPhotos() {
+    const grid = document.getElementById('photoGrid');
+    if (!grid) return;
+    grid.innerHTML = ""; 
+
+    for (const albumName in photoAlbums) {
+        // 1. Album Header
+        const albumHeader = document.createElement('h2');
+        albumHeader.className = 'section-title';
+        albumHeader.style.width = "100%";
+        albumHeader.style.marginTop = "40px";
+        albumHeader.innerText = albumName;
+        grid.appendChild(albumHeader);
+
+        // 2. Smaller Photo Cards
+        photoAlbums[albumName].forEach(photo => {
             const card = document.createElement('div');
-            card.className = 'video-card hanging-pic';
+            // We combine video-card style with our new photo-card size
+            card.className = 'video-card photo-card hanging-pic'; 
+            
             card.onclick = () => {
                 document.getElementById('fullImage').src = photo.url;
                 document.getElementById('imagePopup').style.display = 'flex';
             };
-            card.innerHTML = `<div class="thumbnail-container"><img src="${photo.url}"></div>
-                <div style="padding:10px;"><h3 class="video-title-glow">${photo.title}</h3></div>`;
+
+            card.innerHTML = `
+                <div class="thumbnail-container">
+                    <img src="${photo.url}" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div style="padding:8px; text-align:center;">
+                    <h3 class="video-title-glow" style="margin:0;">${photo.title}</h3>
+                </div>
+            `;
             grid.appendChild(card);
         });
     }
+}
 
     function handleLogoClick() {
         logoClicks++;
@@ -468,19 +900,85 @@
         }
     }
 
-    function goHome() {
-        document.getElementById('mainSection').style.display = 'block';
-        document.getElementById('freedomWallSection').style.display = 'none';
-        document.getElementById('photoGallerySection').style.display = 'none';
-        renderHome();
-    }
+ function goHome() {
+    // 1. Hide the floating logo
+    const homeBtn = document.getElementById('globalHomeBtn');
+    if(homeBtn) homeBtn.style.display = 'none';
 
-    function openFreedomWall() {
-        document.getElementById('mainSection').style.display = 'none';
-        document.getElementById('photoGallerySection').style.display = 'none';
-        document.getElementById('freedomWallSection').style.display = 'block';
+    // 2. Switch Section Visibility
+    document.getElementById('mainSection').style.display = 'block';
+    document.getElementById('freedomWallSection').style.display = 'none';
+    document.getElementById('photoGallerySection').style.display = 'none';
+    
+    // 3. Bring the Video back to life
+    const bgVid = document.getElementById('bgVideo');
+    if (bgVid) {
+        document.body.style.backgroundImage = "none"; // Remove the GIF
+        bgVid.style.display = 'block';               // Make video visible again
+        bgVid.style.opacity = '1';                   // Ensure it's not transparent
+        
+        // If it still doesn't show, we re-trigger the source
+        if (bgVid.paused) {
+            bgVid.play().catch(e => console.log("Video play interrupted"));
+        }
     }
+    
+    renderHome();
+}
 
+function openFreedomWall() {
+    // Show the floating logo
+    const homeBtn = document.getElementById('globalHomeBtn');
+    if(homeBtn) homeBtn.style.display = 'block';
+
+    document.getElementById('mainSection').style.display = 'none';
+    document.getElementById('freedomWallSection').style.display = 'block';
+    // ... rest of your Freedom Wall GIF code
+}
+function openPhotoGallery() {
+    // Show the button
+    document.getElementById('globalBackBtn').style.display = 'flex';
+    
+    document.getElementById('mainSection').style.display = 'none';
+    document.getElementById('freedomWallSection').style.display = 'none';
+    document.getElementById('photoGallerySection').style.display = 'block';
+    renderPhotos();
+}
+
+function openFreedomWall() {
+    // Show the button
+    document.getElementById('globalBackBtn').style.display = 'flex';
+    
+    document.getElementById('mainSection').style.display = 'none';
+    document.getElementById('photoGallerySection').style.display = 'none';
+    document.getElementById('freedomWallSection').style.display = 'block';
+    // ... your GIF background code ...
+}
+
+function openPhotoGallery() {
+    // Show the floating logo
+    const homeBtn = document.getElementById('globalHomeBtn');
+    if(homeBtn) homeBtn.style.display = 'block';
+
+    document.getElementById('mainSection').style.display = 'none';
+    document.getElementById('photoGallerySection').style.display = 'block';
+    renderPhotos();
+}
+
+   function openFreedomWall() {
+    document.getElementById('mainSection').style.display = 'none';
+    document.getElementById('photoGallerySection').style.display = 'none';
+    document.getElementById('freedomWallSection').style.display = 'block';
+
+    const bgVid = document.getElementById('bgVideo');
+    if (bgVid) {
+        bgVid.style.opacity = '0'; // Smoothly hide video
+        // Replace with your GIF link
+        document.body.style.backgroundImage = "url('minimoss.gif')";
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundAttachment = "fixed";
+    }
+}
     function openCredits() {
         const popup = document.getElementById('creditsPopup');
         popup.classList.remove('closing');
@@ -506,33 +1004,108 @@
 
     function handleSearch() {
         const query = searchInput.value.toLowerCase();
+        if (query === "") {
+            renderHome();
+            return;
+        }
         const filtered = videoLibrary.filter(v => v.title.toLowerCase().includes(query));
-        goHome(); 
         renderHome(filtered);
         if(window.innerWidth <= 768) document.getElementById('searchBar').classList.remove('active');
     }
 
-    function closePopup() {
-        document.getElementById('welcomePopup').style.display = 'none';
-        welcomeMusic.volume = 0.4;
-        welcomeMusic.play();
-        document.getElementById('bgVideo').play();
+    function explodeMemories() {
+        const images = ["626078592_894724716853667_7084276459759821829_n.jpg.jpeg", "download (17).jpg", "download (16).jpg", "sky.jpg", "birdap.png"];
+        for (let i = 0; i < 18; i++) {
+            const piece = document.createElement("img");
+            piece.src = images[Math.floor(Math.random() * images.length)];
+            piece.className = "splatter-piece";
+            const randomX = (Math.random() - 0.5) * 1000 + "px";
+            const randomY = (Math.random() - 0.5) * 800 + "px";
+            const randomRot = (Math.random() * 720 - 360) + "deg";
+            piece.style.setProperty("--x", randomX);
+            piece.style.setProperty("--y", randomY);
+            piece.style.setProperty("--rot", randomRot);
+            document.body.appendChild(piece);
+            setTimeout(() => piece.remove(), 900);
+        }
     }
 
-    function renderHome(videos = videoLibrary) {
-        container.innerHTML = `<h2 class="section-title">Video Gallery ✨</h2><div class="video-grid"></div>`;
-        const grid = container.querySelector('.video-grid');
-        videos.forEach(v => {
-            const card = document.createElement('div');
-            card.className = 'video-card';
-            card.onclick = () => openPlayer(v.youtubeId, v.title);
-            card.innerHTML = `<div class="thumbnail-container"><img src="${v.thumbnail}" onerror="this.src='https://img.youtube.com/vi/${v.youtubeId}/maxresdefault.jpg'"></div>
-                <div style="display:flex; gap:12px; margin-top:12px;">
-                    <div class="avatar"><img src="${v.profilePic}"></div>
-                    <div class="text-info"><h3 class="video-title-glow">${v.title}</h3><p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7);">${v.author}</p></div>
-                </div>`;
-            grid.appendChild(card);
-        });
+    function closePopup() {
+        explodeMemories();
+        const popupBox = document.getElementById('welcomeBox');
+        const fullOverlay = document.getElementById('welcomePopup');
+        popupBox.classList.add('pop-out');
+        fullOverlay.style.opacity = '0';
+        setTimeout(() => {
+            fullOverlay.style.display = 'none';
+            welcomeMusic.volume = 0.4;
+            welcomeMusic.play();
+            document.getElementById('bgVideo').play();
+        }, 400);
+    }
+
+    // --- FIXED RENDERHOME ---
+    function renderHome(filteredVideos = null) {
+        container.innerHTML = ""; 
+
+        // 1. Search Logic
+        if (filteredVideos !== null) {
+            if (filteredVideos.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding: 100px 20px;"><h2 class="section-title" style="color: #ff4b4b; border:none;">404: MEMORY BREACHED ERRORCODE:67</h2><button class="post-btn" onclick="goHome() ">Back to Reality</button></div>`;
+                return;
+            }
+            createSection("Search Results ✨", filteredVideos);
+            return; // Stops it from showing manual headers during search
+        }
+
+        // 2. Manual Headers
+        // ONLY call index numbers that exist (0 to 3 right now)
+        createSection("𝖵ꪱᜒᑯ౿𝗈 𝗀ɑᥣᥣ౿𝗋ɣ", []);
+        createSection("July 2025", [videoLibrary[3]]);
+        createSection("August 2025", [videoLibrary[4]]);
+        createSection("September 2025", [videoLibrary[5]]);
+        createSection("December 2025", [videoLibrary[1], videoLibrary[2]]);
+        
+    }
+
+    function createSection(title, videos) {
+        const header = document.createElement('h2');
+        header.className = 'section-title';
+        header.style.marginTop = "50px";
+        header.innerText = title;
+        container.appendChild(header);
+        const grid = document.createElement('div');
+        grid.className = 'video-grid';
+        videos.forEach(v => { if(v) grid.appendChild(createManualCard(v)); });
+        container.appendChild(grid);
+    }
+
+    function createManualCard(v) {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        // Force the card to only be as tall as its content
+        card.style.height = "auto"; 
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+
+        card.onclick = () => openPlayer(v.youtubeId, v.title);
+        
+        // Only creates the description box IF there is text
+        const descriptionHTML = v.description 
+            ? `<p style="margin: 8px 0 0 0; color: #7dd3fc; font-size: 0.85rem; line-height: 1.4; flex-grow: 0;">${v.description}</p>` 
+            : '';
+
+        card.innerHTML = `
+            <div class="thumbnail-container" style="margin-bottom: 8px;">
+                <img src="${v.thumbnail}" onerror="this.src='https://img.youtube.com/vi/${v.youtubeId}/maxresdefault.jpg'">
+            </div>
+            <div style="display:flex; flex-direction:column; gap:2px; flex-grow: 1;">
+                <h3 class="video-title-glow" style="margin:0; font-size:1.05rem;">${v.title}</h3>
+                <p style="margin:0; color:rgba(255,255,255,0.6); font-size:0.8rem;">${v.author}</p>
+                ${descriptionHTML}
+            </div>
+        `;
+        return card;
     }
 
     function openPlayer(id, title) {
@@ -550,7 +1123,7 @@
 
     window.onload = function() {
         renderHome();
-        startJellyRain(); // INITIALIZE THE RAIN
+        startJellyRain();
         setTimeout(() => {
             document.getElementById('loadingSection').style.display = 'none';
             document.getElementById('readySection').style.display = 'block';
