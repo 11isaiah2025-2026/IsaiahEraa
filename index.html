@@ -228,7 +228,7 @@
         }
 
         .overlay-grid { 
-            display: grid; grid-template-columns: 800px 320px; grid-template-rows: 500px auto;
+            display: grid; grid-template-columns: 800px 320px; grid-template-rows: 500px auto auto;
             gap: 20px; position: relative; max-width: 95%;
         }
         .y2k-window { background: #7110a5; border: 4px solid var(--y2k-border); border-radius: 8px; display: flex; flex-direction: column; box-shadow: 6px 6px 0px rgba(66, 105, 167, 0.2); overflow: hidden; }
@@ -239,6 +239,67 @@
         .y2k-banner { background: var(--y2k-blue); color: white; text-align: center; padding: 10px; font-weight: bold; border: 4px solid var(--y2k-border); font-size: 18px; }
 
         #imagePopup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 23, 41, 0.95); backdrop-filter: blur(15px); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        
+        #imagePopup.opening { 
+            display: flex !important; 
+            animation: popupFadeIn 0.4s ease forwards;
+        }
+        
+        #imagePopup.closing { 
+            animation: popupFadeOut 0.3s ease forwards;
+        }
+        
+        #fullImage {
+            animation: imagePop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+        
+        #imagePopup.closing #fullImage {
+            animation: imageShrink 0.3s ease forwards;
+        }
+        
+        @keyframes popupFadeIn {
+            from { 
+                opacity: 0; 
+                backdrop-filter: blur(0px);
+            } 
+            to { 
+                opacity: 1;
+                backdrop-filter: blur(15px);
+            } 
+        }
+        
+        @keyframes popupFadeOut {
+            from { 
+                opacity: 1;
+                backdrop-filter: blur(15px);
+            } 
+            to { 
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            } 
+        }
+        
+        @keyframes imagePop {
+            from {
+                opacity: 0;
+                transform: scale(0.3) rotate(-10deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+        
+        @keyframes imageShrink {
+            from {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.2) rotate(10deg);
+            }
+        }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -596,6 +657,17 @@
     }
 }
 
+@keyframes messageFadeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+}
+
 @media (max-width: 768px) {
     .interactive-character-wrapper {
         bottom: 20px;
@@ -879,27 +951,27 @@
         <h2 class="glow-text stagger delay-1" style="color: #de23ff; margin-bottom: 25px;">AND ALL THANKS TO MY TEAMS AND PARTNERS FOR MAKING THIS WEBSITE FEEL ALIVE LOL:</h2>
         
         <div id="teamGrid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-            <div class="team-card stagger delay-2">
+            <div class="team-card stagger delay-2" onclick="showTeamMembers('Matt James Abes')" style="cursor: pointer;">
                 <img src="Screenshot 2026-02-20 113129.png">
                 <h3 style="margin:0; font-size: 1.1rem;">Matt James Abes</h3>
-                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Developer/Programmer</p>
+                <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Developer/Programmer <br> (pst! click me to see my members)</p>
             </div>
-            <div class="team-card stagger delay-3">
+            <div class="team-card stagger delay-3" onclick="showTeamMembers('Reigne Escobio')" style="cursor: pointer;">
                 <img src="Screenshot 2026-02-21 224521.png">
                 <h3 style="margin:0; font-size: 1.1rem;">Reigne Escobio</h3>
                 <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Video Editor</p>
             </div>
-            <div class="team-card stagger delay-4">
+            <div class="team-card stagger delay-4" onclick="showTeamMembers('Faith Jimenez')" style="cursor: pointer;">
                 <img src="Screenshot 2026-02-21 224502.png">
                 <h3 style="margin:0; font-size: 1.1rem;">Faith Jimenez</h3>
                 <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Layout Design/Design Artist</p>
             </div>
-            <div class="team-card stagger delay-5">
+            <div class="team-card stagger delay-5" onclick="showTeamMembers('Althea Julia Taping')" style="cursor: pointer;">
                 <img src="Screenshot 2026-02-21 224549.png">
                 <h3 style="margin:0; font-size: 1.1rem;">Althea Julia Taping</h3>
                 <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Archivist</p>
             </div>
-            <div class="team-card stagger delay-2">
+            <div class="team-card stagger delay-2" onclick="showTeamMembers('Khalel Vergara')" style="cursor: pointer;">
                 <img src="Screenshot 2026-02-21 224607.png">
                 <h3 style="margin:0; font-size: 1.1rem;">Khalel Vergara</h3>
                 <p style="color: #7dd3fc; font-size: 0.8rem; margin: 5px 0 0 0;">Lead Information/Description Writer</p>
@@ -970,7 +1042,16 @@ You are loved. Never think that no one does. Youre human your feelings matter an
     </div>
 </div>
 
-<div id="imagePopup" onclick="this.style.display='none'">
+<div id="teamMembersPopup" onclick="closeTeamPopup()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 23, 41, 0.95); backdrop-filter: blur(15px); z-index: 20001; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: rgba(45, 130, 222, 0.15); border: 3px solid #7b23ff; border-radius: 25px; padding: 40px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; box-shadow: 0 0 50px rgba(123, 35, 255, 0.4); animation: zoomInBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        <h2 id="teamLeaderName" class="glow-text" style="margin: 0 0 5px 0; font-size: 1.6rem;"></h2>
+        <p id="teamRole" style="color: #08a1f4; font-size: 1.1rem; margin: 0 0 25px 0; font-weight: bold;"></p>
+        <div id="teamMembersGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 40px; margin-bottom: 20px;"></div>
+        <p style="color: #7dd3fc; font-weight: bold; text-align: center; margin-top: 15px;">Click anywhere to close!!</p>
+    </div>
+</div>
+
+<div id="imagePopup" onclick="closeImagePopup()">
     <img id="fullImage" src="" style="max-width:90%; max-height:85%; border: 3px solid #d71cd4; border-radius:15px; box-shadow: 0 0 30px #d71cd4;">
     <p style="margin-top: 15px; color: white; font-weight: bold;">Click anywhere to close!!</p>
 </div>
@@ -1006,6 +1087,10 @@ You are loved. Never think that no one does. Youre human your feelings matter an
                 <div class="stream-chat" id="streamChat"></div>
             </div>
             <div class="y2k-banner" id="videoTitleDisplay">Loading...</div>
+            <div class="y2k-window" id="videoDescriptionBox" style="display:none; background: #0a0015; max-height: 200px; min-height: 150px;">
+                <div class="y2k-header" style="justify-content:space-between; background: #4a0080;"><span>DESCRIPTION</span><span>×</span></div>
+                <div class="stream-chat" id="videoDescription" style="color: #fff; background: #0a0015; text-align: left; line-height: 1.6; font-weight: normal; text-shadow: none; font-size: 0.9rem; white-space: pre-wrap; word-wrap: break-word;"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -1041,16 +1126,17 @@ You are loved. Never think that no one does. Youre human your feelings matter an
         { title: "FNF vs Skyverse - Star", author: "Jerne", youtubeId: "QejwFcgWuIo", thumbnail: "starr.jpg", description:'' }, 
         { title: "ARRIBA HUMANISTA: Intramurals 🔥", author: "Isaiah 2025-2026", youtubeId: "fv5y46FWNEo", thumbnail: "Screenshot 2026-02-20 093658.png", description:'December wasn’t just about the holidays it was about sportsmanship, teamwork, and pure HUMSS spirit! We were hooked, cheering for every basketball and volleyball match, and our hearts were on the edge during the suspenseful and breathtaking last game. Our strand ended up as the champion in men’s basketball, and yes we even had our own cheer, “Arriba Humanista!”, all thanks to the dedication of every player, especially those in our section. Moments like these remind us that victory isn’t just about the trophy it’s about the heart, effort, and camaraderie behind it. 💛' },
         { title: "Intramurals #2", author: "Isaiah 2025-2026", youtubeId: "mbA3WJsKIbQ", thumbnail: "Screenshot 2026-02-20 102731.png", description:'' },
-        { title: "First Competition, First Team Effort", author: "Isaiah 2025-2026", youtubeId: "aGChp9bN5zY", thumbnail: "Screenshot 2026-02-20 222647.png", description:"Nutrition Month marked the very first competition of the year, and our classmate Bernadeth was chosen to represent 11–Isaiah. For the first time, we truly felt the importance of collaboration and teamwork, coming together to support her and give our best as a strand. It was more than just a competition it was a reminder that success is sweeter when we lift each other up." },
+        { title: "First Competition, First Team Effort!! <3", author: "Isaiah 2025-2026", youtubeId: "aGChp9bN5zY", thumbnail: "Screenshot 2026-02-20 222647.png", description:"Nutrition Month marked the very first competition of the year, and our classmate Bernadeth was chosen to represent 11–Isaiah. For the first time, we truly felt the importance of collaboration and teamwork, coming together to support her and give our best as a strand. It was more than just a competition it was a reminder that success is sweeter when we lift each other up." },
         { title: "Pride in Our Language 🇵🇭", author: "Isaiah 2025-2026", youtubeId: "LqNPewX4EEs", thumbnail: "Screenshot 2026-02-20 224702.png", description:'August was a meaningful and vibrant month as we celebrated Buwan ng Wika. It was filled with exciting activities such as the Quiz Bee and the Mr. and Miss Lakan at Lakambini. We would like to give a special mention to our representatives, Julianne Oriendo and Samuel Padilla, for proudly representing 11–Isaiah.Their hard work and confidence led us to win an award that is now proudly displayed in our classroom. More than the recognition, we felt that we made Sir Mark truly proud, and that is something we will always treasure.' },
         { title: "SCIMATECH: A Month Of Unity and Joy!!", author: "Isaiah 2025-2026", youtubeId: "V9b6LELpSSc", thumbnail: "Screenshot 2026-02-20 225704.png", description:'September was a month of unity for our section, not just because of the Science Month events, but because the whole section offered their utmost effort and support toward Diaz and his competition. There were many moments where it felt hard for us, but there were also moments where it all felt worth it. In the end, it was a fun and enjoyable month in our school year.' },
         { title: "Healing, Sharing, and Growing Together !! <3 ", author: "Isaiah 2025-2026", youtubeId: "TRR5cBkGWy8", thumbnail: "Screenshot 2026-02-22 223616.png", description:"Mental Health Day was more than just a break from academics. It became a moment for us to pause, breathe, and reconnect with ourselves and with one another. We enjoyed Zumba, expressed our emotions through coloring and drawing while listening to music, and opened up as we shared the things we had been carrying inside. Most importantly, Sir Mark was there to listen and support us, reminding us that our feelings truly matter. It was a simple yet meaningful day that strengthened our hearts, our minds, and our bond as a class."  },
-        { title: "SCIMATECH: A Month Of Unity and Joy!!", author: "Isaiah 2025-2026", youtubeId: "V9b6LELpSSc", thumbnail: "Screenshot 2026-02-20 225704.png", description:'' },
-         { title: "___", author: "Isaiah 2025-2026", youtubeId: "V9b6LELpSSc", thumbnail: "Screenshot 2026-02-20 225704.png", description:'' },
-          { title: "___", author: "Isaiah 2025-2026", youtubeId: "V9b6LELpSSc", thumbnail: "Screenshot 2026-02-20 225704.png", description:'' },
-           { title: "___", author: "Isaiah 2025-2026", youtubeId: "V9b6LELpSSc", thumbnail: "Screenshot 2026-02-20 225704.png", description:'' },
-            { title: "___", author: "Isaiah 2025-2026", youtubeId: "V9b6LELpSSc", thumbnail: "Screenshot 2026-02-20 225704.png", description:'' },
-             { title: "___", author: "Isaiah 2025-2026", youtubeId: "V9b6LELpSSc", thumbnail: "Screenshot 2026-02-20 225704.png", description:'' }
+        { title: "Mark Day: A Celebration to Remember :> ", author: "Isaiah 2025-2026", youtubeId: "D7UaFYdXXQg", thumbnail: "Daymark.jpeg", description:'October 10th will forever be a special date the day our beloved adviser, Sir Mark, was gifted into this world. We panicked, planned, and wondered how we could make his birthday simple yet unforgettable. One hour was all it took to create a moment filled with laughter, joy, and togetherness. From sharing the foods we got for him to watching a video where every single person greeted him, we felt we truly succeeded when it made him cry proof that our small celebration had a big impact. 💙' },
+         { title: "Title: From Sleepless Nights to Spotlight Lights: Zumbalympics Elimination!!", author: "Isaiah 2025-2026", youtubeId: "mCVuRzvLcEQ", thumbnail: "zumba.png", description:'November was filled with dedication and sacrifices from everyone. This month showed how our section poured out all their effort and hard work for Zumbalypics. Even though we did not achieve the championship title we were hoping for, we are still grateful for the opportunity to showcase our talent in dancing and in creating our costumes. We are beyond proud of everyone for giving their best in this Zumbalypics dance competition. We may not have brought home the title of CHAMPION, but we are thankful that we made it to the finals. All your hard work did not go unnoticed. The teamwork, perseverance, and determination everyone showed truly made this experience meaningful and unforgettable. Thank you for showing up, giving your all, and proving that unity and effort matter more than any trophy.' },
+          { title: "Birthday of sir Mark #2!", author: "Isaiah 2025-2026", youtubeId: "MM1W-By2iPA", thumbnail: "sirmarkk.png", description:'' },
+           { title: "Sparkling and Bells: A December to Remember!", author: "Isaiah 2025-2026", youtubeId: "juPzUL8SQX8", thumbnail: "Screenshot 2026-02-23 184951.png", description:'From playing fun games to sharing meals and endless laughs, this Christmas party reminded us that the best part of the season is being together. This kind of day is truly the best, forever will cherish the memories.Our Christmas party was truly a day to remember. Everyone was excited as we played different games, laughed together, and cheered for one another. The room was filled with joy and happiness, especially when we shared delicious food and exchanged smiles. Aside from the prizes that everyone is receiving, and the activities that we do, what made the celebration more special was the bonding, memories, laughter, shouting that we created together. It was a simple celebration, yet it was the most special moments and gratitude that everyones shared!' },
+            { title: "ZUMBALYPICS: where unity is revealed in moments of needs!!", author: "Isaiah 2025-2026", youtubeId: "Ied6-hCzS3k", thumbnail: "Screenshot 2026-02-23 191346.png", description:'November was filled with dedication and sacrifices from everyone. This month showed how our section poured out all their effort and hard work for Zumbalypics. Even though we did not achieve the championship title we were hoping for, we are still grateful for the opportunity to showcase our talent in dancing and in creating our costumes. We are beyond proud of everyone for giving their best in this Zumbalypics dance competition. We may not have brought home the title of CHAMPION, but we are thankful that we made it to the finals. All your hard work did not go unnoticed. The teamwork, perseverance, and determination everyone showed truly made this experience meaningful and unforgettable. Thank you for showing up, giving your all, and proving that unity and effort matter more than any trophy.' },
+             { title: "Feb-ibig : Valentine’s Day 💕", author: "Isaiah 2025-2026", youtubeId: "sSoevMHsPXA", thumbnail: "Screenshot 2026-02-23 191737.png", description:'' }
+
     ];
 
    const photoAlbums = {
@@ -1253,8 +1339,11 @@ function renderPhotos() {
             card.className = 'video-card photo-card hanging-pic'; 
             
             card.onclick = () => {
+                const popup = document.getElementById('imagePopup');
+                popup.classList.remove('closing');
+                popup.classList.add('opening');
                 document.getElementById('fullImage').src = photo.url;
-                document.getElementById('imagePopup').style.display = 'flex';
+                popup.style.display = 'flex';
             };
 
             card.innerHTML = `
@@ -1351,6 +1440,124 @@ function openFreedomWall() {
         }, 300);
     }
 
+    function closeImagePopup() {
+        const popup = document.getElementById('imagePopup');
+        popup.classList.remove('opening');
+        popup.classList.add('closing');
+        setTimeout(() => {
+            popup.classList.remove('closing');
+            popup.style.display = 'none';
+        }, 300);
+    }
+
+    // Team structure - each leader and their members
+    const teamMembers = {
+        'Matt James Abes': {
+            role: 'Lead Developer/Programmer',
+            members: [
+                { name: 'Matt James Abes', image: 'Screenshot 2026-02-20 113129.png' },
+                 { name: 'Hayle Anna Marmolejo', image: 'Marmolejo.JPG' },
+                 { name: 'John Elyson Atienza', image: 'Atienza.JPG' },
+                 { name: 'Breis', image: 'Breis.JPG' },
+                 { name: 'Gayle Eirianne Catipon', image: 'Catipon.JPG' },
+                 { name: 'Jane Credo', image: 'Credo.JPG' },
+                 { name: 'Andrea Eurika Liaguno', image: 'Liaguno.JPG' },
+                  { name: 'Manuel James Mancera', image: 'Mancera.JPG' },
+                 { name: 'John Rien Pernia', image: 'Pernia.JPG' },
+                 { name: 'Jane Credo', image: 'Credo.JPG' },
+                 { name: 'Ayanah Cent Petancio', image: 'Petancio.JPG' },
+                // Add more members here
+            ]
+        },
+        'Reigne Escobio': {
+            role: 'Lead Video Editor',
+            members: [
+                { name: 'Reigne Escobio', image: 'Screenshot 2026-02-21 224521.png' },
+                { name: 'Hannah Meszha Abaca', image: 'Abaca.JPG' },
+                { name: 'Jayden Alforte', image: 'Alforte.JPG' },
+                { name: 'Reyna Santea Araza', image: 'Araza.JPG' },
+                { name: 'Cathryn Bacud', image: 'Bacud.JPG' },
+                { name: 'John Eduard Cosare', image: 'Cosare.JPG' },
+                { name: 'Asher Lee Ibanez', image: 'Ibañez.JPG' },
+                { name: 'Reigne Escobio', image: 'Screenshot 2026-02-21 224521.png' },
+                { name: 'Ashanti Swing', image: 'Swing.JPG' },
+                { name: 'Janella Vargas', image: 'Vargas.JPG' },
+                // Add more members here
+            ]
+        },
+        'Faith Jimenez': {
+            role: 'Lead Layout Design/Design Artist',
+            members: [
+                { name: 'Faith Jimenez', image: 'Screenshot 2026-02-21 224502.png' },
+                { name: 'Acosta', image: 'Acosta.jpg' },
+                { name: 'Gemparo', image: 'Gemparo.jpg' },
+                { name: 'Vallespin', image: 'Vallespin.jpg' },
+                { name: 'Agapito', image: 'Agapito.jpg' },
+                { name: 'Salinas', image: 'Salinas.jpg' },
+                { name: 'Belmonte', image: 'Belmonte.jpg' },
+                
+                // Add more members here
+            ]
+        },
+        'Althea Julia Taping': {
+            role: 'Lead Archivist',
+            members: [
+                { name: 'Althea Julia Taping', image: 'Screenshot 2026-02-21 224549.png' },
+                { name: 'Shiela Mae Agustin', image: 'Agustin.jpg' },
+                { name: 'Gloliza Bandoy', image: 'Bandoy.jpg' },
+                { name: 'Bernadette Francisco', image: 'Francisco.jpg' },
+                { name: 'Prince Lonzaga', image: 'Lonzaga.jpg' },
+                { name: 'Shane Maghanoy', image: 'Maghanoy.jpg' },
+                { name: 'Julianne Rose Oriendo', image: 'Oriendo.jpg' },
+                { name: 'Jennica May Sarmiento', image: 'Sarmiento.jpg' },
+                { name: 'Kryzza Khalel Parreno', image: 'Parreno.jpg' }
+            ]
+        },
+        'Khalel Vergara': {
+            role: 'Lead Information/Description Writer',
+            members: [
+                { name: 'Khalel Vergara', image: 'Screenshot 2026-02-21 224607.png' },
+                 { name: 'Khurt Alvin Falogme', image: 'Falogme.jpg' },
+                { name: 'Aithan James Bonaobra', image: 'Bonaobra.jpg' },
+                { name: 'Clarence Salazar', image: 'Salazar.jpg' },
+                { name: 'Kharlley Jade Robles', image: 'Robles, K.jpg' },
+                { name: 'Akinori Sato', image: 'Sato.jpg' },
+                { name: 'Reyhan Datukaka', image: 'Datukaka.jpg' },
+                { name: 'Bernadeth Pasiola', image: 'Pasiola.jpg' },
+                { name: 'Jhade Jordan', image: 'Jordan.jpg' },
+                // Add more members here
+            ]
+        }
+    };
+
+    function showTeamMembers(leaderName) {
+        const team = teamMembers[leaderName];
+        if (!team) return;
+        
+        const popup = document.getElementById('teamMembersPopup');
+        document.getElementById('teamLeaderName').textContent = leaderName;
+        document.getElementById('teamRole').textContent = team.role;
+        
+        const membersGrid = document.getElementById('teamMembersGrid');
+        membersGrid.innerHTML = '';
+        
+        team.members.forEach(member => {
+            const memberDiv = document.createElement('div');
+            memberDiv.style.cssText = 'text-align: center; padding: 15px;';
+            memberDiv.innerHTML = `
+                <img src="${member.image}" style="width: 180px; height: 180px; border-radius: 50%; border: 3px solid #7b23ff; object-fit: cover; margin-bottom: 10px; box-shadow: 0 0 15px rgba(123, 35, 255, 0.5);">
+                <p style="margin: 10px 0 0 0; color: #fff; font-weight: bold;">${member.name}</p>
+            `;
+            membersGrid.appendChild(memberDiv);
+        });
+        
+        popup.style.display = 'flex';
+    }
+
+    function closeTeamPopup() {
+        document.getElementById('teamMembersPopup').style.display = 'none';
+    }
+
     function toggleSearch() {
         document.getElementById('searchBar').classList.toggle('active');
         if(document.getElementById('searchBar').classList.contains('active')) {
@@ -1420,8 +1627,10 @@ function openFreedomWall() {
         createSection("July 2025", [videoLibrary[3]]);
         createSection("August 2025", [videoLibrary[4]]);
         createSection("September 2025", [videoLibrary[5]]);
-        createSection("October 2025", [videoLibrary[6]]);
-        createSection("December 2025", [videoLibrary[1], videoLibrary[2]]);
+        createSection("October 2025", [videoLibrary[6], videoLibrary[7], videoLibrary[9], videoLibrary[8]]);
+         createSection("November 2025", [videoLibrary[11]]);
+        createSection("December 2025", [videoLibrary[1], videoLibrary[2], videoLibrary[10]]);
+        createSection("February 2026", [videoLibrary[12]]);
         
     }
 
@@ -1445,7 +1654,7 @@ function openFreedomWall() {
         card.style.display = "flex";
         card.style.flexDirection = "column";
 
-        card.onclick = () => openPlayer(v.youtubeId, v.title);
+        card.onclick = () => openPlayer(v.youtubeId, v.title, v.description);
         
         // Only creates the description box IF there is text
         const descriptionHTML = v.description 
@@ -1465,10 +1674,21 @@ function openFreedomWall() {
         return card;
     }
 
-    function openPlayer(id, title) {
+    function openPlayer(id, title, description = '') {
         welcomeMusic.pause();
         document.getElementById('videoTitleDisplay').textContent = title;
         playerIframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+        
+        // Show/hide description based on whether it exists
+        const descBox = document.getElementById('videoDescriptionBox');
+        const descText = document.getElementById('videoDescription');
+        if (description && description.trim()) {
+            descText.textContent = description;
+            descBox.style.display = 'flex';
+        } else {
+            descBox.style.display = 'none';
+        }
+        
         document.getElementById('playerOverlay').classList.add('overlay-active');
     }
 
@@ -1662,7 +1882,7 @@ function openFreedomWall() {
         
         // Initialize interactive home character
         const mainChar = document.getElementById('mainCharacter');
-        mainChar.style.backgroundImage = "url('pizza.gif')";
+        mainChar.style.backgroundImage = "url('eggo.gif')";
         mainChar.onclick = showCharacterMessage;
         
         setTimeout(() => {
@@ -1681,8 +1901,10 @@ function openFreedomWall() {
         "Section had most issue but yet made tons of memories eh?",
         "This section is an okayish ! 💙",
         "Click around, there's more! lmfaoo",
-        "byee",
+         "Mango is fat as hell loL!",
+        "ok byee now",
         "uhh why are u still clicking me?"
+        
     ];
 
     let messageIndex = 0;
@@ -1691,6 +1913,7 @@ function openFreedomWall() {
         const msgDiv = document.getElementById('characterMessage');
         msgDiv.textContent = characterMessages[messageIndex % characterMessages.length];
         msgDiv.className = 'character-message';
+        msgDiv.style.pointerEvents = 'auto';
         
         // Reset animation
         msgDiv.style.animation = 'none';
@@ -1700,11 +1923,11 @@ function openFreedomWall() {
         
         messageIndex++;
         
-        // Remove message after 3 seconds
+        // Fade out message after 10 seconds
         setTimeout(() => {
-            msgDiv.style.opacity = '0';
+            msgDiv.style.animation = 'messageFadeOut 0.5s ease-out forwards';
             msgDiv.style.pointerEvents = 'none';
-        }, 3000);
+        }, 10000);
     }
 </script>
 </body>
